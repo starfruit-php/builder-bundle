@@ -1,0 +1,27 @@
+{
+  "name":"starfruit/builder-bundle",
+  "description":"Starfruit Builder Bundle",
+  "keywords":[
+    "starfruit", "builder"
+  ],
+  "homepage":"https://github.com/starfruit-php/builder-bundle",
+  "license":"MIT",
+  "authors":[
+    {
+      "name":"Nguyen Hoang Anh",
+      "email":"anhnh@starfruit.com.vn",
+      "role":"Developer"
+    }
+  ],
+  "require":{
+  },
+  "require-dev":{
+  },
+  "suggest":{
+  },
+  "autoload": {
+    "psr-4": {
+      "Starfruit\\BuilderBundle\\": "src/"
+    }
+  }
+}

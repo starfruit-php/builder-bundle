@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+        {{ block("layout_link") }}
+
+        {% apply spaceless %}
+            {# Favicon #}
+            {% set favicon = pimcore_website_config('layout_favicon') %}
+            {% if favicon %}
+                {% do pimcore_head_link().appendStylesheet(
+                    favicon,
+                    null,
+                    null,
+                    {
+                        rel: "icon",
+                        type: "image/x-icon"
+                    }
+                ) %}
+            {% endif %}
+
+            {% if not document is defined or not document %}
+                {% set document = pimcore_document(1) %}
+            {% endif %}
+
+            {{ block("layout_head") }}
+        {% endapply %}
+
+        {% block head_meta deferred %}
+            {{ pimcore_head_title() }}
+            {{ pimcore_head_meta() }}
+            {{ pimcore_head_link() }}
+        {% endblock %}
+
+        {{ block("layout_meta") }}
+    </head>
+
+    {{ block("layout_body") }}
+</html>

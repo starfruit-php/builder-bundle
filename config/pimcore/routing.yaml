@@ -1,0 +1,3 @@
+starfruit_builder_homepage:
+    path:     /starfruit_builder
+    defaults: { _controller: StarfruitBuilderBundle\Controller\DefaultController:indexAction }

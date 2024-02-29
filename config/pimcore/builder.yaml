@@ -1,0 +1,62 @@
+pimcore:
+    chromium:
+        uri: 'ws://chrome:3000/'
+
+    gotenberg:
+        base_url: 'http://gotenberg:3000'
+
+    config_location:
+        image_thumbnails:
+            write_target:
+                type: 'settings-store'
+        video_thumbnails:
+            write_target:
+                type: 'settings-store'
+        document_types:
+            write_target:
+                type: 'settings-store'
+        predefined_properties:
+            write_target:
+                type: 'settings-store'
+        predefined_asset_metadata:
+            write_target:
+                type: 'settings-store'
+        perspectives:
+            write_target:
+                type: 'settings-store'
+        custom_views:
+            write_target:
+                type: 'settings-store'
+        object_custom_layouts:
+            write_target:
+                type: 'settings-store'
+        system_settings:
+            write_target:
+                type: 'settings-store'
+            read_target:
+                type: 'settings-store'
+
+pimcore_admin:
+    admin_csp_header:
+        enabled: true
+        exclude_paths:
+            - '@^/admin/external_opcache@'
+
+    config_location:
+        admin_system_settings:
+            write_target:
+                type: 'settings-store'
+            read_target:
+                type: 'settings-store'
+
+pimcore_static_routes:
+    config_location:
+        staticroutes:
+            write_target:
+                type: 'settings-store'
+
+pimcore_custom_reports:
+    config_location:
+        custom_reports:
+            write_target:
+                type: 'settings-store'
