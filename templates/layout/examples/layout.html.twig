@@ -1,0 +1,24 @@
+{% extends '@StarfruitBuilder/layout/app.html.twig' %}
+
+{% block layout_link %}
+    {# css link #}
+{% endblock %}
+
+{% block layout_head %}
+    {# custom code for head tag #}
+{% endblock %}
+
+{% block layout_meta %}
+    {# meta tag config #}
+{% endblock %}
+
+{% block layout_body %}
+    {# menu header #}
+
+    <body>
+        {# main content #}
+        {{ block("content") }}
+    </body>
+
+    {# js script #}
+{% endblock %}

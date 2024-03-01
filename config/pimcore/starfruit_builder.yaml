@@ -1,0 +1,6 @@
+starfruit_builder:
+    link_generate_objects:
+        event:
+            class_name: Event
+            field_create_slug: name
+            field_for_slug: slug

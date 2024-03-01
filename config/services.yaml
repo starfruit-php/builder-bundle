@@ -16,6 +16,12 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    Starfruit\BuilderBundle\Extension\:
+        resource: '../src/Extension/*'
+
+    Starfruit\BuilderBundle\LinkGenerator\:
+        resource: '../src/LinkGenerator/*'
+
     Starfruit\BuilderBundle\Model\:
         resource: '../src/Model/*'
 
@@ -25,6 +31,10 @@ services:
     Starfruit\BuilderBundle\EventListener\Asset\AdminImagePreviewListener:
         tags:
             - { name: kernel.event_listener, event: pimcore.admin.resolve.elementAdminStyle, method: onResolveElementAdminStyle }
+
+    Starfruit\BuilderBundle\EventListener\Object\SlugListener:
+        tags:
+            - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: preUpdate }
 
 # add more services, or override services that need manual wiring
 #    Starfruit\BuilderBundle\ExampleClass:

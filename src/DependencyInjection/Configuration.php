@@ -23,6 +23,33 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $treeBuilder->getRootNode()
+            ->children()
+                ->arrayNode('link_generate_objects')
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('class_name')
+                                ->info('Class name of object include slug field')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('field_create_slug')
+                                ->info('Name of field used to create slug')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->scalarNode('field_for_slug')
+                                ->info('Name of slug field in object')
+                                ->cannotBeEmpty()
+                            ->end()
+                            ->booleanNode('update_while_empty')
+                                ->info('Yes or no that creating slug from field_create_slug value while field_for_slug value is empty')
+                                ->defaultTrue()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }
