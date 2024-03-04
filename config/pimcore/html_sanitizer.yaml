@@ -1,0 +1,35 @@
+framework:
+    html_sanitizer:
+        sanitizers:
+            pimcore.wysiwyg_sanitizer:
+                # allow_safe_elements: true
+                allow_elements:
+                    figure: '*'
+                    p: '*'
+                    strong: '*'
+                    em: '*'
+                    h1: '*'
+                    h2: '*'
+                    h3: '*'
+                    h4: '*'
+                    h5: '*'
+                    h6: '*'
+                    a: '*'
+                    table: '*'
+                    colgroup: '*'
+                    col: '*'
+                    tbody: '*'
+                    tr: '*'
+                    td: '*'
+                    ul: '*'
+                    li: '*'
+                    ol: '*'
+                    img: '*'
+                    span: '*'
+                    b: '*'
+                    i: '*'
+                    article: '*'
+                    picture: '*'
+                    figcaption: '*'
+                    source: '*'
+                    video: '*'

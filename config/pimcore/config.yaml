@@ -1,3 +1,4 @@
 imports:
     - { resource: builder.yaml }
     - { resource: starfruit_builder.yaml }
+    - { resource: html_sanitizer.yaml }

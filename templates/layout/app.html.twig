@@ -10,6 +10,7 @@
         {% apply spaceless %}
             {# Favicon #}
             {% set favicon = pimcore_website_config('layout_favicon') %}
+            {% set favicon = favicon and favicon is instanceof('\\Pimcore\\Model\\Asset\\Image') ? favicon.getFullPath() : null %}
             {% if favicon %}
                 {% do pimcore_head_link().appendStylesheet(
                     favicon,
