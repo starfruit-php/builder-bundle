@@ -7,7 +7,7 @@ use Pimcore\Model\Asset\Image;
 use Pimcore\Model\Asset\Image\Thumbnail;
 use Starfruit\BuilderBundle\LinkGenerator\AbstractLinkGenerator;
 
-class AssetExtension extends \Twig\Extension\AbstractExtension
+class RenderExtension extends \Twig\Extension\AbstractExtension
 {
     /**
      * @return TwigFunction[]
@@ -16,6 +16,7 @@ class AssetExtension extends \Twig\Extension\AbstractExtension
     {
         return [
             new TwigFunction('builder_render_image', [$this, 'renderImage']),
+            new TwigFunction('builder_render_wysiwyg', ['\Starfruit\BuilderBundle\Tool\TextTool', 'formatWysiwyg']),
         ];
     }
 

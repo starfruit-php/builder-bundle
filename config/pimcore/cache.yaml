@@ -1,0 +1,9 @@
+framework:
+    cache:
+        pools:
+            pimcore.cache.pool:
+                public: true
+                tags: true
+                default_lifetime: 31536000
+                adapter: pimcore.cache.adapter.redis_tag_aware
+                provider: '%env(string:REDIS_PROVIDER)%'

@@ -1,0 +1,42 @@
+#install package league/flysystem-azure-blob-storage
+
+pimcore:
+    assets:
+        frontend_prefixes:
+            # Prefix used for the original asset files
+            source: '%env(string:ASSET_AZURE_BLOB_URL)%/asset'
+            # Prefix used for all generated image & video thumbnails
+            thumbnail: '%env(string:ASSET_AZURE_BLOB_URL:-default_value)%/thumbnail'
+
+services:
+    flysystem.adapter.azure.client:
+        class: MicrosoftAzure\Storage\Blob\BlobRestProxy
+        factory: [MicrosoftAzure\Storage\Blob\BlobRestProxy, createBlobService]
+        arguments: ["%env(string:ASSET_AZURE_BLOB_STRING)%"]
+
+    flysystem.adapter.azure.asset:
+        class: League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter
+        arguments: ["@flysystem.adapter.azure.client", "%env(string:ASSET_AZURE_BLOB_CONTAINER)%", "asset"]
+
+    flysystem.adapter.azure.thumbnail:
+        class: League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter
+        arguments: ["@flysystem.adapter.azure.client", "%env(string:ASSET_AZURE_BLOB_CONTAINER)%", "thumbnail"]
+
+    flysystem.adapter.azure.asset_cache:
+        class: League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter
+        arguments: ["@flysystem.adapter.azure.client", "%env(string:ASSET_AZURE_BLOB_CONTAINER)%", "asset-cache"]
+
+flysystem:
+    storages:
+        pimcore.asset.storage:
+            adapter: 'flysystem.adapter.azure.asset'
+            visibility: public
+
+        pimcore.asset_cache.storage:
+            adapter: 'flysystem.adapter.azure.asset_cache'
+            visibility: public
+
+        pimcore.thumbnail.storage:
+            adapter: 'flysystem.adapter.azure.thumbnail'
+            visibility: public
+            
