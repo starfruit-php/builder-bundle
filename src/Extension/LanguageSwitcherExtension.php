@@ -42,19 +42,13 @@ class LanguageSwitcherExtension extends AbstractExtension
 
         $languages = Tool::getValidLanguages();
         foreach ($languages as $language) {
-            $check = '';
             $target = '/' . $language;
+
             //skip if root document for local is missing
-            $checkDocument = Document::getByPath($target);
-            if (!($checkDocument instanceof Document and !$checkDocument->getProperty('navigation_exclude'))) {
+            if (!(Document::getByPath($target) instanceof Document)) {
                 continue;
             }
 
-            if ($language != 'vi') {
-                $document = Document::getByPath('/' . $language);
-            }
-
-            //kiểm tra có đa ngôn ngữ chưa
             if (isset($translations[$language])) {
                 $localizedDocument = Document::getById($translations[$language]);
                 if ($localizedDocument) {
@@ -63,7 +57,8 @@ class LanguageSwitcherExtension extends AbstractExtension
             }
 
             $links[$language] = [
-                'link' => !empty($check) ? $check : $target,
+                'link' => $target,
+                'language' => $language,
                 'text' => \Locale::getDisplayLanguage($language),
                 'image' => self::getLanguageFlagFile($language),
             ];
