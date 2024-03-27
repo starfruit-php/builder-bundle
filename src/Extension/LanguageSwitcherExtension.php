@@ -2,16 +2,17 @@
 
 namespace Starfruit\BuilderBundle\Extension;
 
-use Starfruit\BuilderBundle\Tool\Text;
-use Pimcore\Model\Document;
-use Pimcore\Model\Document\Service;
-use Pimcore\Tool;
+use Twig\TwigFunction;
+use Twig\Extension\AbstractExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Pimcore\Tool;
+use Pimcore\Model\Document;
+use Pimcore\Model\Document\Service;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Post;
+use Pimcore\Model\DataObject\Data\UrlSlug;
+use Starfruit\BuilderBundle\Tool\ParameterTool;
 
 class LanguageSwitcherExtension extends AbstractExtension
 {
@@ -36,24 +37,64 @@ class LanguageSwitcherExtension extends AbstractExtension
 
     public function getLocalizedLinks(Document $document)
     {
-        $document = $this->requestStack?->getMainRequest()?->attributes?->get('contentDocument') ?: $document;
+        $languages = Tool::getValidLanguages();
+
+        $mainRequest =  $this->requestStack?->getMainRequest();
+        $document = $mainRequest?->attributes?->get('contentDocument') ?: $document;
+
+        $urlSlug = $mainRequest?->attributes?->get('urlSlug');
+
+        $slugObject = null;
+        $slugCreateField = null;
+        $slugForField = null;
+        if ($urlSlug instanceof UrlSlug) {
+            $objectId = $urlSlug->getObjectId();
+            $object = DataObject::getById($objectId);
+
+            if ($object && $object->getPublished()) {
+                $linkGenerateObjects = ParameterTool::getLinkGenerateObjects();
+                $classNames = array_column($linkGenerateObjects, 'class_name');
+                $classKey = array_keys($linkGenerateObjects)[array_search($object->getClassname(), $classNames)];
+
+                if ($classKey) {
+                    $slugObject = $object;
+                    $slugCreateField = $linkGenerateObjects[$classKey]['field_create_slug'];
+                    $slugForField = $linkGenerateObjects[$classKey]['field_for_slug'];
+                }
+            }
+        }
+
         $translations = $this->documentService->getTranslations($document);
         $request = $this->requestStack->getCurrentRequest();
         $links = [];
 
-        $languages = Tool::getValidLanguages();
         foreach ($languages as $language) {
-            $target = '/' . $language;
+            $target = null;
 
-            //skip if root document for local is missing
-            if (!(Document::getByPath($target) instanceof Document)) {
-                continue;
+            // exist value for slug -> get it
+            if ($slugObject && $slugCreateField && $slugForField) {
+                $slugCreateValue = $slugObject->{'get' . ucfirst($slugCreateField)}($language);
+                if ($slugCreateValue) {
+                    $targets = $slugObject->{'get' . ucfirst($slugForField)}($language);
+
+                    if (!empty($targets)) {
+                        $target = array_shift($targets)->getSlug();
+                    }
+                }
             }
+            if (!$target) {
+                $target = '/' . $language;
 
-            if (isset($translations[$language])) {
-                $localizedDocument = Document::getById($translations[$language]);
-                if ($localizedDocument) {
-                    $target = $localizedDocument->getFullPath();
+                //skip if root document for local is missing
+                if (!(Document::getByPath($target) instanceof Document)) {
+                    continue;
+                }
+
+                if (isset($translations[$language])) {
+                    $localizedDocument = Document::getById($translations[$language]);
+                    if ($localizedDocument) {
+                        $target = $localizedDocument->getFullPath();
+                    }
                 }
             }
 
