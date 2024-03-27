@@ -81,7 +81,12 @@ class LanguageSwitcherExtension extends AbstractExtension
                         $target = array_shift($targets)->getSlug();
                     }
                 }
+
+                if (!$target) {
+                    continue;
+                }
             }
+
             if (!$target) {
                 $target = '/' . $language;
 
