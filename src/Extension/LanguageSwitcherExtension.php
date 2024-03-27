@@ -36,6 +36,7 @@ class LanguageSwitcherExtension extends AbstractExtension
 
     public function getLocalizedLinks(Document $document)
     {
+        $document = $this->requestStack?->getMainRequest()?->attributes?->get('contentDocument') ?: $document;
         $translations = $this->documentService->getTranslations($document);
         $request = $this->requestStack->getCurrentRequest();
         $links = [];
