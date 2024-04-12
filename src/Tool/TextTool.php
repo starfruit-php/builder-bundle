@@ -44,6 +44,7 @@ class TextTool
                          'O', 'o', 'O', 'o', 'O', 'o', 'o', 'O', 'o', 'OE', 'O', 'o', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'S', 's', 'S', 's',
                          'Z', 'z', 'Z', 'z', 'Z', 'z', 'L', 'l', 'N', 'n', 'N', 'n', '', '', 'Y', 'y', '-', '-' ];
 
+        $text = preg_replace("/[\/\~`!@#$%^&*()_+=\$]/", "-", $text);
         $value = urlencode(str_replace($search, $replace, $text));
         $value = implode('-', array_filter(explode('-', $value)));
 
