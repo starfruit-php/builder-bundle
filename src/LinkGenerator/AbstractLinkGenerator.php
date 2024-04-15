@@ -5,10 +5,11 @@ namespace Starfruit\BuilderBundle\LinkGenerator;
 use Pimcore\Model\DataObject\Data\UrlSlug;
 use Starfruit\BuilderBundle\Tool\TextTool;
 use Starfruit\BuilderBundle\Tool\ParameterTool;
+use Pimcore\Model\DataObject\ClassDefinition\LinkGeneratorInterface;
 
-class AbstractLinkGenerator
+class AbstractLinkGenerator implements LinkGeneratorInterface
 {
-    public static function generate(object $object, array $params = [])
+    public function generate(object $object, array $params = []): string
     {
         $linkGenerateObjects = ParameterTool::getLinkGenerateObjects();
 
@@ -18,14 +19,15 @@ class AbstractLinkGenerator
                 $function = 'get' . ucfirst($config['field_for_slug']);
 
                 if ($object instanceof $class && method_exists($object, $function)) {
-                    $slugs = $object->$function();
+                    $locale = isset($params['locale']) ? $params['locale'] : null;
+                    $slugs = $locale ? $object->$function($locale) : $object->$function();
 
                     if (!is_array($slugs) || empty($slugs)) {
-                        return null;
+                        return '';
                     }
 
                     $slug = reset($slugs);
-                    return $slug instanceof UrlSlug ? $slug->getSlug() : null;
+                    return $slug instanceof UrlSlug ? $slug->getSlug() : '';
                 }
             }
         }
