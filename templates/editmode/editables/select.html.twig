@@ -1,0 +1,9 @@
+
+{% set store = store is defined and store is iterable ? store : [] %}
+
+<section>
+    {{ include(builderEditmodeTitle) }}
+    {{ pimcore_select(name, {
+        "store": store
+    }) }}
+</section>

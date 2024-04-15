@@ -18,15 +18,20 @@ services:
 
     Starfruit\BuilderBundle\Extension\:
         resource: '../src/Extension/*'
+        public: true
 
     Starfruit\BuilderBundle\LinkGenerator\:
         resource: '../src/LinkGenerator/*'
+        public: true
 
     Starfruit\BuilderBundle\Model\:
         resource: '../src/Model/*'
 
     Starfruit\BuilderBundle\Tool\:
         resource: '../src/Tool/*'
+
+    Starfruit\BuilderBundle\Service\:
+        resource: '../src/Service/*'
 
     Starfruit\BuilderBundle\EventListener\Asset\AdminImagePreviewListener:
         tags:
@@ -36,9 +41,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: preUpdate }
 
-    # Starfruit\BuilderBundle\EventListener\ControllerListener:
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.controller }
+    Starfruit\BuilderBundle\EventListener\ControllerListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller }
 
     Starfruit\BuilderBundle\EventListener\Admin\StyleListener:
         tags:

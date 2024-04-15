@@ -1,0 +1,7 @@
+
+<section>
+    {{ include(builderEditmodeTitle) }}
+    {{ pimcore_input(name, {
+        "placeholder": placeholder is defined ? placeholder | capitalize : ''
+    }) }}
+</section>

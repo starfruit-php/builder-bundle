@@ -1,0 +1,25 @@
+
+{% set fields = fields is defined and fields is iterable ? fields : [] %}
+
+{% set condition = {} %}
+{% if limit is defined and limit > 0 %}
+    {% set condition = condition|merge({'limit': limit}) %}
+{% endif %}
+
+<section>
+    <h6 class="text-capitalize">{{ listTitle is defined ? listTitle | capitalize : '' }}</h6>
+    {% for i in pimcore_block(prefix ~"List", condition).iterator %}
+        {% for field in fields %}
+            <br>
+            {{ include("@StarfruitBuilder/editmode/editables/"~ field.type ~".html.twig", {
+                "name": field.name is defined ? field.name : null,
+                "prefix": field.prefix is defined ? field.prefix : null,
+                "placeholder": field.placeholder is defined ? field.placeholder : null,
+                "classes": field.classes is defined ? field.classes : null,
+                "store": field.store is defined ? field.store : null,
+                "title": field.title is defined ? field.title : null,
+                "imageTitle": field.imageTitle is defined ? field.imageTitle : null
+            }) }}
+        {% endfor %}
+    {% endfor %}
+</section>

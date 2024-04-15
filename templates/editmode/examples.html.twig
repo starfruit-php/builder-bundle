@@ -1,0 +1,155 @@
+{% extends editmode ? builderEditmodeLayout : 'layouts/layout.html.twig' %}
+
+{% set adminLayoutTitle = "Editmode setting" %}
+
+{% set customLayouts = [
+    {
+        'label': 'Content',
+        'layouts': [
+            {
+                'editable': 'input',
+                'col': 4,
+                'params': {
+                    'name': 'name',
+                    'placeholder': 'Page name'
+                }
+            },
+            {
+                'editable': 'textarea',
+                'col': 4,
+                'params': {
+                    'name': 'description',
+                    'placeholder': 'Page description'
+                }
+            },
+            {
+                'editable': 'numeric',
+                'col': 4,
+                'params': {
+                    'name': 'total',
+                    'placeholder': 'Page view total'
+                }
+            },
+            {
+                'editable': 'wysiwyg',
+                'col': 12,
+                'params': {
+                    'name': 'content',
+                    'placeholder': 'Page main content'
+                }
+            },
+            
+        ]
+    },
+    {
+        'label': 'Media',
+        'layouts': [
+            {
+                'editable': 'image',
+                'col': 6,
+                'params': {
+                    'name': 'banner',
+                    'title': 'Banner image'
+                }
+            },
+            {
+                'editable': 'video',
+                'col': 6,
+                'params': {
+                    'name': 'video'
+                }
+            }
+        ]
+    },
+    {
+        'label': 'Relation',
+        'layouts': [
+            {
+                'editable': 'relation',
+                'col': 12,
+                'params': {
+                    'name': 'hotNews',
+                    'classes': ['News'],
+                    'title': 'Choose hot news list'
+                }
+            },
+            {
+                'editable': 'relations',
+                'col': 12,
+                'params': {
+                    'name': 'tags',
+                    'classes': ['Tags'],
+                    'title': 'Choose highlight tags'
+                }
+            },
+        ]
+    },
+    {
+        'label': 'Other components',
+        'layouts': [
+            {
+                'editable': 'checkbox',
+                'col': 6,
+                'params': {
+                    'name': 'displayVideo',
+                    'title': 'Check if display video'
+                }
+            },
+            {
+                'editable': 'select',
+                'col': 6,
+                'params': {
+                    'name': 'selectAnHour',
+                    'store': [
+                        ["08:00", "mornig"],
+                        ["12:00", "lunch"],
+                        ["14:00", "afternoon"],
+                        ["20:00", "evening"]
+                    ]
+                }
+            },
+            {
+                'editable': 'link',
+                'col': 12,
+                'params': {
+                    'name': 'link',
+                    'title': 'Test link'
+                }
+            }
+        ]
+    },
+    {
+        'label': 'Block',
+        'layouts': [
+            {
+                'editable': 'list',
+                'params': {
+                    'prefix': 'post',
+                    'fields': [
+                        {
+                            'type': 'input',
+                            'name': 'title',
+                            'placeholder': 'Post title'
+                        },
+                        {
+                            'type': 'textarea',
+                            'name': 'content',
+                            'placeholder': 'Post content'
+                        },
+                        {
+                            'type': 'image',
+                            'name': 'avatar',
+                            'title': 'Post avatar'
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+] %}
+
+{% block content %}
+    {% set editableData = builder_render_editables(customLayouts) %}
+
+    {# ... render main html with data in editableData var ... #}
+{% endblock %}

@@ -1,0 +1,8 @@
+
+<section>
+    {{ include(builderEditmodeTitle) }}
+    {{ pimcore_textarea(name, {
+        "height": 100,
+        "placeholder": placeholder is defined ? placeholder | capitalize : ''
+    }) }}
+</section>

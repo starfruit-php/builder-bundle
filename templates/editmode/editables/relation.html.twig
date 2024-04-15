@@ -1,0 +1,14 @@
+
+{% set classes = classes is defined and classes is iterable ? classes : [] %}
+
+<section>
+    {{ include(builderEditmodeTitle) }}
+    {{ pimcore_relation(name, {
+        "types": ["object"],
+        "subtypes": {
+            "object": ["object"],
+        },
+        "classes": classes
+    }) }}
+
+</section>

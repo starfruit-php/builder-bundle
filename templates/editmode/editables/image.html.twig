@@ -1,0 +1,7 @@
+
+<section>
+    {{ include(builderEditmodeTitle) }}
+    {{ pimcore_image(name, {
+        "title": title is defined ? title | capitalize : ''
+    }) }}
+</section>

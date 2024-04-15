@@ -1,0 +1,11 @@
+{% if assets %}
+    <div class="row mb-2 mt-2">
+        {% for asset in assets %}
+            {% if asset is instanceof('\\Pimcore\\Model\\Asset\\Image') %}
+                <div class="col-md-4">
+                    <img src="{{ asset }}" width="100%" height="50%">
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
