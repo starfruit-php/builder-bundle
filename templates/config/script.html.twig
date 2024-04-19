@@ -1,0 +1,27 @@
+{% extends builderEditmodeLayout%}
+
+{% set adminLayoutTitle = "Custom Scripts Config" %}
+
+{% set customLayouts = [
+    {
+        'label': 'Custom code',
+        'layouts': [
+            {
+                'editable': 'textarea',
+                'col': 12,
+                'params': {
+                    'name': 'headCode',
+                    'placeholder': 'Code in <head>'
+                }
+            },
+            {
+                'editable': 'textarea',
+                'col': 12,
+                'params': {
+                    'name': 'bodyCode',
+                    'placeholder': 'Code in <body>'
+                }
+            },
+        ]
+    },
+] %}
