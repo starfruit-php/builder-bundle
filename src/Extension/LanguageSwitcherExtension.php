@@ -10,9 +10,8 @@ use Pimcore\Tool;
 use Pimcore\Model\Document;
 use Pimcore\Model\Document\Service;
 use Pimcore\Model\DataObject;
-use Pimcore\Model\DataObject\Post;
 use Pimcore\Model\DataObject\Data\UrlSlug;
-use Starfruit\BuilderBundle\Tool\ParameterTool;
+use Starfruit\BuilderBundle\Config\ObjectConfig;
 
 class LanguageSwitcherExtension extends AbstractExtension
 {
@@ -44,23 +43,14 @@ class LanguageSwitcherExtension extends AbstractExtension
 
         $urlSlug = $mainRequest?->attributes?->get('urlSlug');
 
-        $slugObject = null;
-        $slugCreateField = null;
-        $slugForField = null;
+        $config = null;
         if ($urlSlug instanceof UrlSlug) {
             $objectId = $urlSlug->getObjectId();
             $object = DataObject::getById($objectId);
 
             if ($object && $object->getPublished()) {
-                $linkGenerateObjects = ParameterTool::getLinkGenerateObjects();
-                $classNames = array_column($linkGenerateObjects, 'class_name');
-                $classKey = array_keys($linkGenerateObjects)[array_search($object->getClassname(), $classNames)];
-
-                if ($classKey) {
-                    $slugObject = $object;
-                    $slugCreateField = $linkGenerateObjects[$classKey]['field_create_slug'];
-                    $slugForField = $linkGenerateObjects[$classKey]['field_for_slug'];
-                }
+                $config = new ObjectConfig($object);
+                $config = $config->valid() ? $config : null;
             }
         }
 
@@ -72,15 +62,8 @@ class LanguageSwitcherExtension extends AbstractExtension
             $target = null;
 
             // exist value for slug -> get it
-            if ($slugObject && $slugCreateField && $slugForField) {
-                $slugCreateValue = $slugObject->{'get' . ucfirst($slugCreateField)}($language);
-                if ($slugCreateValue) {
-                    $targets = $slugObject->{'get' . ucfirst($slugForField)}($language);
-
-                    if (!empty($targets)) {
-                        $target = array_shift($targets)->getSlug();
-                    }
-                }
+            if ($config) {
+                $target = $config->getSlug(['locale' => $language]);
 
                 if (!$target) {
                     continue;

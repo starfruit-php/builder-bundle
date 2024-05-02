@@ -25,6 +25,7 @@ class StarfruitBuilderExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.yaml');
 
-        $container->setParameter('starfruit_builder.link_generate_objects', $config['link_generate_objects']);
+        $container->setParameter('starfruit_builder.object', $config['link_generate_objects'] ?? null);
+        $container->setParameter('starfruit_builder.seo', $config['seo'] ?? null);
     }
 }
