@@ -127,7 +127,7 @@ class ObjectConfig
                     $value = AssetTool::getFrontendFullPath($value, $thumbnail);
                 }
 
-                $seoData[$key] = $value;
+                $seoData[$key] = (string) $value;
             }
         }
 
