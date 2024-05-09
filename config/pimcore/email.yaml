@@ -1,0 +1,5 @@
+framework:
+    mailer:
+        transports:
+            main: "%env(string:BUILDER_MAILER_DSN)%"
+            pimcore_newsletter: "%env(string:BUILDER_MAILER_DSN)%"

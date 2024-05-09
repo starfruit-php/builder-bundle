@@ -2,6 +2,7 @@ imports:
     - { resource: builder.yaml }
     - { resource: starfruit_builder.yaml }
     - { resource: html_sanitizer.yaml }
+    - { resource: 'email.yaml', ignore_errors: true }
 
     # - { resource: './flysystem/aws_s3.yaml', ignore_errors: true }
     # - { resource: './flysystem/azure_blob.yaml', ignore_errors: true }
