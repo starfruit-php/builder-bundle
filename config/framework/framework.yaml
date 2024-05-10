@@ -1,0 +1,3 @@
+imports:
+    - { resource: html_sanitizer.yaml }
+    - { resource: mailer.yaml, ignore_errors: true }
