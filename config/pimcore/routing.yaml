@@ -1,3 +1,7 @@
-starfruit_builder_homepage:
-    path:     /starfruit_builder
-    defaults: { _controller: StarfruitBuilderBundle\Controller\DefaultController:indexAction }
+# starfruit_builder_api:
+#     resource: "@StarfruitBuilderBundle/src/Controller/API/"
+#     type: annotation
+
+starfruit_builder_default:
+    resource: "@StarfruitBuilderBundle/src/Controller/*"
+    type: annotation
