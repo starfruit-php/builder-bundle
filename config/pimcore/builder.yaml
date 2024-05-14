@@ -6,12 +6,12 @@ pimcore:
         base_url: 'http://gotenberg:3000'
 
     config_location:
-        image_thumbnails:
-            write_target:
-                type: 'settings-store'
-        video_thumbnails:
-            write_target:
-                type: 'settings-store'
+        # image_thumbnails:
+        #     write_target:
+        #         type: 'settings-store'
+        # video_thumbnails:
+        #     write_target:
+        #         type: 'settings-store'
         document_types:
             write_target:
                 type: 'settings-store'
@@ -49,14 +49,14 @@ pimcore_admin:
             read_target:
                 type: 'settings-store'
 
-pimcore_static_routes:
-    config_location:
-        staticroutes:
-            write_target:
-                type: 'settings-store'
+# pimcore_static_routes:
+#     config_location:
+#         staticroutes:
+#             write_target:
+#                 type: 'settings-store'
 
-pimcore_custom_reports:
-    config_location:
-        custom_reports:
-            write_target:
-                type: 'settings-store'
+# pimcore_custom_reports:
+#     config_location:
+#         custom_reports:
+#             write_target:
+#                 type: 'settings-store'
