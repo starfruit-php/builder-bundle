@@ -16,6 +16,10 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    Starfruit\BuilderBundle\Command\:
+        resource: '../src/Command'
+        tags: ['console.command']
+
     Starfruit\BuilderBundle\Extension\:
         resource: '../src/Extension/*'
         public: true
@@ -38,6 +42,9 @@ services:
 
     Starfruit\BuilderBundle\Validator\:
         resource: '../src/Validator/*'
+
+    Starfruit\BuilderBundle\Seo\:
+        resource: '../src/Seo/*'
 
     Starfruit\BuilderBundle\EventListener\Asset\AdminImagePreviewListener:
         tags:

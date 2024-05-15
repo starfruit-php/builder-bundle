@@ -27,10 +27,13 @@ class ObjectConfig
 
     private $seoFields;
 
-    public function __construct(DataObject $object)
+    // $object is id (int) or object
+    public function __construct($object, $locale = null)
     {
+        $object = $object instanceof DataObject ? $object : DataObject::getById($object);
+
         $this->valid = true;
-        $this->locale = LanguageTool::getLocale();
+        $this->locale = $locale ?: LanguageTool::getLocale();
         $this->seoFields = [];
         $this->object = $object;
         $this->className = $object->getClassName();
@@ -141,6 +144,7 @@ class ObjectConfig
 
         if (!in_array($this->className, $classNames)) {
             $this->valid = false;
+            return null;
         }
 
         return $config[array_keys($config)[array_search($this->className, $classNames)]];
