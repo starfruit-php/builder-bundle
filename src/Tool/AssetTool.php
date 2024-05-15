@@ -26,9 +26,7 @@ class AssetTool
             $frontendPath = $asset->getFrontendFullPath();
         }
 
-        $url = preg_match('/^http(s)?:\\/\\/.+/', $frontendPath) ?
-            $frontendPath :
-            \Symfony\Component\HttpFoundation\Request::createFromGlobals()->getSchemeAndHttpHost() . $frontendPath;
+        $url = SystemTool::getUrl($frontendPath);
 
         return $url;
     }

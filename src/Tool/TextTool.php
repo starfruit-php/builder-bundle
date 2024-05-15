@@ -51,6 +51,11 @@ class TextTool
         return $value;
     }
 
+    public static function removeHtmlTag($text)
+    {
+        return strip_tags($text);
+    }
+
     /**
      * @param string $text
      * @return string

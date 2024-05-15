@@ -34,3 +34,4 @@ framework:
                     figcaption: '*'
                     source: '*'
                     video: '*'
+                    section: '*'
