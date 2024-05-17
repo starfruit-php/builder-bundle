@@ -6,10 +6,13 @@ class EditableService
 {
     public static function getEditdata($editable)
     {
-        $type = $editable->getType();
-        $function = 'get' . ucfirst($type);
-        if (method_exists(__CLASS__, $function)) {
-            return call_user_func_array(__CLASS__ .'::'. $function, [$editable]);
+        $type = $editable?->getType();
+
+        if ($type) {
+            $function = 'get' . ucfirst($type);
+            if (method_exists(__CLASS__, $function)) {
+                return call_user_func_array(__CLASS__ .'::'. $function, [$editable]);
+            }
         }
 
         return null;
@@ -18,11 +21,13 @@ class EditableService
     public static function getBlock($editable, $fields)
     {
         $data = [];
-        $elements = $editable->getElements();
+        $elements = $editable?->getElements();
 
-        foreach ($elements as $key => $element) {
-            foreach ($fields as $field) {
-                $data[$key][$field] = self::getEditdata($element->getEditable($field));
+        if (!empty($element)) {
+            foreach ($elements as $key => $element) {
+                foreach ($fields as $field) {
+                    $data[$key][$field] = self::getEditdata($element->getEditable($field));
+                }
             }
         }
     
@@ -71,12 +76,12 @@ class EditableService
 
     private static function getRelation($editable)
     {
-        return $editable->isEmpty() ? null : $editable->getElement();
+        return $editable->isEmpty() ? null : $editable?->getElement();
     }
 
     private static function getRelations($editable)
     {
-        return $editable->isEmpty() ? [] : $editable->getElements();
+        return $editable->isEmpty() ? [] : (array) $editable?->getElements();
     }
 
     private static function getLink($editable)
@@ -101,5 +106,10 @@ class EditableService
     private static function getNumeric($editable)
     {
         return $editable->isEmpty() ? null : $editable->getData();
+    }
+
+    private static function getDate($editable)
+    {
+        return $editable->isEmpty() ? $editable->getData()->format('d-m-Y') : null;
     }
 }
