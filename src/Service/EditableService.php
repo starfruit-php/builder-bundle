@@ -110,6 +110,6 @@ class EditableService
 
     private static function getDate($editable)
     {
-        return $editable->isEmpty() ? $editable->getData()->format('d-m-Y') : null;
+        return $editable->isEmpty() ? null : $editable->getData();
     }
 }
