@@ -5,6 +5,7 @@ namespace Starfruit\BuilderBundle\Command;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 use Starfruit\BuilderBundle\Service\DatabaseService;
 
@@ -14,13 +15,31 @@ class SetupCommand extends AbstractCommand
     {
         $this
             ->setName('builder:setup')
-            ->setDescription('Setup Starfruit Builder configs');
+            ->setDescription('Setup Starfruit Builder configs')
+            ->addOption(
+                // this is the name that users must type to pass this option (e.g. --iterations=5)
+                'update',
+                // this is the optional shortcut of the option name, which usually is just a letter
+                // (e.g. `i`, so users pass it as `-i`); use it for commonly used options
+                // or options with long names
+                'u',
+                // this is the type of option (e.g. requires a value, can be passed more than once, etc.)
+                InputOption::VALUE_NONE,
+                // the option description displayed when showing the command help
+                'Update custom tables in database'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        DatabaseService::createBuilderSeo();
+        $update = $input->getOption('update');
 
-        return 1;
+        if ((bool) $update) {
+            DatabaseService::updateBuilderSeo();
+        } else {                                                             
+            DatabaseService::createBuilderSeo();
+        }
+
+        return AbstractCommand::SUCCESS;
     }
 }

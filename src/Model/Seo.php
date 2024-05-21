@@ -20,6 +20,26 @@ class Seo extends AbstractModel
     public ?string $description = null;
     public ?string $keyword = null;
     public ?string $language = null;
+    public ?bool $index = null;
+    public ?bool $nofollow = null;
+    public ?string $canonicalUrl = null;
+    public ?bool $redirectLink = null;
+    public ?string $redirectType = null;
+    public ?string $destinationUrl = null;
+
+    public static function getById(int $id): ?self
+    {
+        try {
+            $obj = new self;
+            $obj->getDao()->getById($id);
+            return $obj;
+        }
+        catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Seo with id $id not found");
+        }
+
+        return null;
+    }
 
     public static function getOrCreate($element, $language = null): ?self
     {
@@ -62,6 +82,25 @@ class Seo extends AbstractModel
         }
         catch (NotFoundException $ex) {
             \Pimcore\Logger::warn("Builder SEO with id $id not found");
+        }
+
+        return null;
+    }
+
+    public static function getByKeyword($keyword, $language = null)
+    {
+        try {
+            if (!$language) {
+                $language = LanguageTool::getLocale();
+            }
+
+            $list = new \Starfruit\BuilderBundle\Model\Seo\Listing();
+            $list->setCondition("keyword = ?", [$keyword]);
+
+            return $list->getData();
+        }
+        catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Builder SEO with keyword $keyword not found");
         }
 
         return null;
@@ -155,6 +194,66 @@ class Seo extends AbstractModel
     public function getKeyword(): ?string
     {
         return $this->keyword;
+    }
+
+    public function setIndex(?bool $index): void
+    {
+        $this->index = $index;
+    }
+
+    public function getIndex(): ?bool
+    {
+        return $this->index;
+    }
+
+    public function setNofollow(?bool $nofollow): void
+    {
+        $this->nofollow = $nofollow;
+    }
+
+    public function getNofollow(): ?bool
+    {
+        return $this->nofollow;
+    }
+
+    public function setRedirectLink(?bool $redirectLink): void
+    {
+        $this->redirectLink = $redirectLink;
+    }
+
+    public function getRedirectLink(): ?bool
+    {
+        return $this->redirectLink;
+    }
+
+    public function setCanonicalUrl(?string $canonicalUrl): void
+    {
+        $this->canonicalUrl = $canonicalUrl;
+    }
+
+    public function getCanonicalUrl(): ?string
+    {
+        return $this->canonicalUrl;
+    }
+
+    public function setRedirectType(?string $redirectType): void
+    {
+        $this->redirectType = $redirectType;
+    }
+
+    public function getRedirectType(): ?string
+    {
+        return $this->redirectType;
+    }
+
+    public function setDestinationUrl(?string $destinationUrl): void
+    {
+        $this->destinationUrl = $destinationUrl;
+    }
+
+    public function getDestinationUrl(): ?string
+    {
+        return $this->destinationUrl;
     }
 
     public function setId(?int $id): void
