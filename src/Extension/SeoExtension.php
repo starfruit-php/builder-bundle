@@ -7,15 +7,13 @@ use Pimcore\Twig\Extension\Templating\HeadMeta;
 use Pimcore\Twig\Extension\Templating\HeadTitle;
 
 use Starfruit\BuilderBundle\Tool\LanguageTool;
-use Starfruit\BuilderBundle\Config\ObjectConfig;
-use Starfruit\BuilderBundle\LinkGenerator\AbstractLinkGenerator;
+use Starfruit\BuilderBundle\Model\Seo;
 
 class SeoExtension extends \Twig\Extension\AbstractExtension
 {
     public function __construct(
         protected HeadMeta $headMeta,
-        protected HeadTitle $headTitle,
-        protected AbstractLinkGenerator $abstractLinkGenerator
+        protected HeadTitle $headTitle
     ) {
     }
 
@@ -35,14 +33,13 @@ class SeoExtension extends \Twig\Extension\AbstractExtension
             $locale = LanguageTool::getLocale();
         }
 
-        $config = new ObjectConfig($object);
-        $seoData = $config->getSeoData();
+        $seo = Seo::getOrCreate($object, $locale);
+        $seoData = $seo->getSeoData();
 
         if (!empty($seoData)) {
             $defaultMetas = [
                 "og:locale" => $locale,
                 "og:type" => "website",
-                "og:url" => $this->abstractLinkGenerator->generate($object),
             ];
 
             $metas = [
@@ -50,6 +47,7 @@ class SeoExtension extends \Twig\Extension\AbstractExtension
                 "og:description" => "description",
                 "og:image" => "image",
                 "og:image:alt" => "title",
+                "og:url" => "slug",
                 "twitter:title" => "title",
                 "twitter:description" => "description",
             ];

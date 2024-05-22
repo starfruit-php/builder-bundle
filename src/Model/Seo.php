@@ -115,6 +115,15 @@ class Seo extends AbstractModel
         return null;
     }
 
+    public function getSeoData()
+    {
+        if ($this->elementType == self::OBJECT_TYPE) {
+            return $this->getObjectSeoData();
+        }
+
+        return null;
+    }
+
     private function getObjectScoring()
     {
         $objectConfig = new ObjectConfig($this->element, $this->language);
@@ -127,13 +136,31 @@ class Seo extends AbstractModel
         $slug = $objectConfig->getSlug();
 
         $title = $this->title ?: $seoData['title'];
-        $description = $this->getDescription() ?: $seoData['description'];
+        $description = $this->description ?: $seoData['description'];
         $content = $seoData['content'];
         $keyword = $this->getKeyword();
 
         $seoScore = new SeoScore($title, $description, $content, $keyword, $slug);
 
         return $seoScore->scoring();
+    }
+
+    private function getObjectSeoData()
+    {
+        $objectConfig = new ObjectConfig($this->element, $this->language);
+
+        if (!$objectConfig->valid()) {
+            return null;
+        }
+
+        $seoData = $objectConfig->getSeoData();
+        $slug = $objectConfig->getSlug();
+
+        $title = $this->title ?: $seoData['title'];
+        $description = $this->description ?: $seoData['description'];
+        $image = $seoData['image'];
+
+        return compact('title', 'description', 'image', 'slug');
     }
 
     public function setElementType(?string $elementType): void
@@ -171,7 +198,7 @@ class Seo extends AbstractModel
         $this->description = $description;
     }
 
-    public function getDescription(): ?string
+    public function description(): ?string
     {
         return $this->description;
     }

@@ -30,13 +30,12 @@
             {{ block("layout_head") }}
         {% endapply %}
 
-        {% block head_meta deferred %}
+        {# SEO #}
+        {% block builder_seo %}
             {{ pimcore_head_title() }}
             {{ pimcore_head_meta() }}
             {{ pimcore_head_link() }}
         {% endblock %}
-
-        {{ block("layout_meta") }}
     </head>
 
     {{ block("layout_body") }}
