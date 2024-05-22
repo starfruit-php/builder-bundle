@@ -23,7 +23,7 @@ class EditableService
         $data = [];
         $elements = $editable?->getElements();
 
-        if (!empty($element)) {
+        if (!empty($elements)) {
             foreach ($elements as $key => $element) {
                 foreach ($fields as $field) {
                     $data[$key][$field] = self::getEditdata($element->getEditable($field));
