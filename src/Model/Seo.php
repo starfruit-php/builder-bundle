@@ -198,7 +198,7 @@ class Seo extends AbstractModel
         $this->description = $description;
     }
 
-    public function description(): ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }

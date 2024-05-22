@@ -47,7 +47,7 @@ Using class `Starfruit\BuilderBundle\Model\Seo` to get scoring result
 SEO Scoring test group
 
 | field | meaning |
-| ------------ | ------------ | ------------ |
+| ------------ | ------------ |
 | `data` | SEO data of element |
 | `basic` | Basic test result |
 | `additional` | Additional test result |
