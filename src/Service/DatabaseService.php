@@ -16,7 +16,7 @@ class DatabaseService
             `description` varchar(255) DEFAULT NULL,
             `keyword` varchar(255) DEFAULT NULL,
             `language` varchar(10) DEFAULT NULL,
-            `index` tinyint(1) DEFAULT 0,
+            `indexing` tinyint(1) DEFAULT 0,
             `nofollow` tinyint(1) DEFAULT 0,
             `canonicalUrl` varchar(255) DEFAULT NULL,
             `redirectLink` tinyint(1) DEFAULT 0,
@@ -33,7 +33,7 @@ class DatabaseService
         self::createBuilderSeo();
 
         $query = "ALTER TABLE `builder_seo`
-            ADD COLUMN IF NOT EXISTS `index` tinyint(1) DEFAULT 0,
+            ADD COLUMN IF NOT EXISTS `indexing` tinyint(1) DEFAULT 0,
             ADD COLUMN IF NOT EXISTS `nofollow` tinyint(1) DEFAULT 0,
             ADD COLUMN IF NOT EXISTS `canonicalUrl` varchar(255) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `redirectLink` tinyint(1) DEFAULT 0,

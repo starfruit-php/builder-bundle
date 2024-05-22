@@ -20,10 +20,10 @@ class Seo extends AbstractModel
     public ?string $description = null;
     public ?string $keyword = null;
     public ?string $language = null;
-    public ?bool $index = null;
-    public ?bool $nofollow = null;
+    public ?bool $indexing = false;
+    public ?bool $nofollow = false;
     public ?string $canonicalUrl = null;
-    public ?bool $redirectLink = null;
+    public ?bool $redirectLink = false;
     public ?string $redirectType = null;
     public ?string $destinationUrl = null;
 
@@ -223,14 +223,14 @@ class Seo extends AbstractModel
         return $this->keyword;
     }
 
-    public function setIndex(?bool $index): void
+    public function setIndexing(?bool $indexing): void
     {
-        $this->index = $index;
+        $this->indexing = $indexing;
     }
 
-    public function getIndex(): ?bool
+    public function getIndexing(): ?bool
     {
-        return $this->index;
+        return $this->indexing;
     }
 
     public function setNofollow(?bool $nofollow): void
