@@ -63,5 +63,11 @@ class SeoExtension extends \Twig\Extension\AbstractExtension
             $this->headTitle->set($seoData['title']);
             $this->headMeta->setDescription($seoData['description']);
         }
+
+        $schemaData = $seo->getSchemaData();
+        // dd($schemaData);
+        foreach ($schemaData as $schemaTag) {
+            $this->headMeta->addRaw($schemaTag);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Starfruit\BuilderBundle\Command;
 
+use Pimcore\Cache;
 use Pimcore\Console\AbstractCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,10 +36,15 @@ class SetupCommand extends AbstractCommand
         $update = $input->getOption('update');
 
         if ((bool) $update) {
+            $this->writeInfo("RUN: Update table builder_seo");
             DatabaseService::updateBuilderSeo();
-        } else {                                                             
+        } else {
+            $this->writeInfo("RUN: Create table builder_seo");
             DatabaseService::createBuilderSeo();
         }
+
+        $this->writeInfo("RUN: Clear all cache");
+        Cache::clearAll();
 
         return AbstractCommand::SUCCESS;
     }

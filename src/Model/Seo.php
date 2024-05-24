@@ -7,6 +7,7 @@ use Pimcore\Model\Exception\NotFoundException;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
 use Starfruit\BuilderBundle\Seo\SeoScore;
+use Starfruit\BuilderBundle\Seo\SeoSchema;
 
 class Seo extends AbstractModel
 {
@@ -26,6 +27,7 @@ class Seo extends AbstractModel
     public ?bool $redirectLink = false;
     public ?string $redirectType = null;
     public ?string $destinationUrl = null;
+    public ?string $schemaBlock = null;
 
     public static function getById(int $id): ?self
     {
@@ -115,7 +117,12 @@ class Seo extends AbstractModel
         return null;
     }
 
-    public function getSeoData()
+    public function getSchemaData(): ?array
+    {
+        return SeoSchema::getSchemaData($this->schemaBlock);
+    }
+
+    public function getSeoData(): ?array
     {
         if ($this->elementType == self::OBJECT_TYPE) {
             return $this->getObjectSeoData();
@@ -124,7 +131,7 @@ class Seo extends AbstractModel
         return null;
     }
 
-    private function getObjectScoring()
+    private function getObjectScoring(): ?array
     {
         $objectConfig = new ObjectConfig($this->element, $this->language);
 
@@ -145,7 +152,7 @@ class Seo extends AbstractModel
         return $seoScore->scoring();
     }
 
-    private function getObjectSeoData()
+    private function getObjectSeoData(): ?array
     {
         $objectConfig = new ObjectConfig($this->element, $this->language);
 
@@ -281,6 +288,16 @@ class Seo extends AbstractModel
     public function getDestinationUrl(): ?string
     {
         return $this->destinationUrl;
+    }
+
+    public function setSchemaBlock(?string $schemaBlock): void
+    {
+        $this->schemaBlock = $schemaBlock;
+    }
+
+    public function getSchemaBlock(): ?string
+    {
+        return $this->schemaBlock;
     }
 
     public function setId(?int $id): void

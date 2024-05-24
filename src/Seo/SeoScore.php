@@ -58,7 +58,7 @@ class SeoScore
         $this->testLink();
     }
 
-    public function scoring()
+    public function scoring(): ?array
     {
         return $this->scoring;
     }
@@ -159,7 +159,7 @@ class SeoScore
         $this->scoring['link'] = compact('detail', 'statusCodeList', 'errorTotal');
     }
 
-    private function scoreTimes($times)
+    private function scoreTimes($times): ?array
     {
         $error = $times == 0;
         $status = $error ? self::DANGER : self::SUCCESS;
@@ -168,7 +168,7 @@ class SeoScore
         return compact('times', 'status', 'error');
     }
 
-    private function scoreNeedTrue($bool, $mergeFields = [])
+    private function scoreNeedTrue($bool, $mergeFields = []): ?array
     {
         $error = !$bool;
         $status = $error ? self::DANGER : self::SUCCESS;
@@ -177,7 +177,7 @@ class SeoScore
         return array_merge(compact('status', 'error'), $mergeFields);
     }
 
-    private function scoreNeedFalse($bool, $mergeFields = [])
+    private function scoreNeedFalse($bool, $mergeFields = []): ?array
     {
         $error = $bool;
         $status = $error ? self::DANGER : self::SUCCESS;
@@ -187,7 +187,7 @@ class SeoScore
     }
 
     // good between 1-1.5%, warning if <= 2.5%
-    private function scoreKeywordDensity()
+    private function scoreKeywordDensity(): ?array
     {
         $times = $this->times;
         $density = ($this->countWord == 0 ? 0 : round(100 * SeoHelper::countWord($this->keyword) * $this->times / $this->countWord));
@@ -205,7 +205,7 @@ class SeoScore
     }
 
     // good if keyword is unique
-    private function scoreKeywordUnique()
+    private function scoreKeywordUnique(): ?array
     {
         $record = Seo::getByKeyword($this->keyword);
         $total = count($record);
@@ -214,14 +214,14 @@ class SeoScore
     }
 
     // good with <= 75
-    private function scoreUrlLength()
+    private function scoreUrlLength(): ?array
     {
         $length = strlen($this->url);
         return $this->scoreNeedTrue($length <= 75, compact('length'));
     }
 
     // good with short paragraphs <= 120 words
-    private function scoreParagraph()
+    private function scoreParagraph(): ?array
     {
         $paragraphs = [
             'total' => 0,
@@ -271,7 +271,7 @@ class SeoScore
         return compact('status', 'error', 'paragraphs');
     }
 
-    private function scoreLink()
+    private function scoreLink(): ?array
     {
         $pattern = '/<a\s+[^>]*href="(http|https):\/\/([^"]+)"[^>]*>/i';
         $external = SeoHelper::getCount($pattern, $this->content);
@@ -290,7 +290,7 @@ class SeoScore
         return compact('total', 'internal', 'external', 'nofollow', 'dofollow');
     }
 
-    private function checkUrl($url)
+    private function checkUrl($url): ?array
     {
         $url = SystemTool::getUrl($url);
         $response = ApiTool::call('GET', $url);

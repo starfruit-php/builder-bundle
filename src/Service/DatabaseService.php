@@ -22,6 +22,7 @@ class DatabaseService
             `redirectLink` tinyint(1) DEFAULT 0,
             `redirectType` varchar(190) DEFAULT NULL,
             `destinationUrl` varchar(255) DEFAULT NULL,
+            `schemaBlock` longtext DEFAULT NULL,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
@@ -38,7 +39,8 @@ class DatabaseService
             ADD COLUMN IF NOT EXISTS `canonicalUrl` varchar(255) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `redirectLink` tinyint(1) DEFAULT 0,
             ADD COLUMN IF NOT EXISTS `redirectType` varchar(190) DEFAULT NULL,
-            ADD COLUMN IF NOT EXISTS `destinationUrl` varchar(255) DEFAULT NULL
+            ADD COLUMN IF NOT EXISTS `destinationUrl` varchar(255) DEFAULT NULL,
+            ADD COLUMN IF NOT EXISTS `schemaBlock` longtext DEFAULT NULL
         ";
 
         Db::get()->executeQuery($query);

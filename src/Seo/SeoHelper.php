@@ -110,6 +110,12 @@ class SeoHelper
 
     public static function containNumber($string): ?bool
     {
-        return (bool) preg_match('~[0-9]+~', $string);
+        $pattern = '~[0-9]+~';
+        return self::validateString($pattern, $string);
+    }
+
+    public static function validateString($pattern, $string): ?bool
+    {
+        return (bool) preg_match($pattern, $string);
     }
 }
