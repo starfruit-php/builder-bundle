@@ -161,6 +161,11 @@ class Seo extends AbstractModel
         }
 
         $seoData = $objectConfig->getSeoData();
+
+        if (empty($seoData)) {
+            return [];
+        }
+
         $slug = $objectConfig->getSlug();
 
         $title = $this->title ?: $seoData['title'];

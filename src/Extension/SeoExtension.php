@@ -53,7 +53,7 @@ class SeoExtension extends AbstractExtension
             $document = $mainRequest?->attributes?->get('contentDocument');
 
             if ($document instanceof Document\Link) {
-                $document = Document::getByPath($document->getHref());
+                $document = $document->getElement();
             }
 
             if ($document instanceof Document\Page) {
