@@ -28,9 +28,7 @@
             {% endif %}
 
             {# SEO #}
-            {% block builder_seo %}
-                {% do builder_seo() %}
-            {% endblock %}
+            {% do builder_seo() %}
 
             {{ block("layout_head") }}
         {% endapply %}
@@ -48,12 +46,11 @@
     {{ block("layout_body") }}
 
     {# output scripts added before #}
-    {# {% block headscripts deferred %}
+    {% block headscripts deferred %}
         {{ pimcore_head_script() }}
     {% endblock %}
 
-
     {% block inlinescripts deferred %}
         {{ pimcore_inline_script() }}
-    {% endblock %} #}
+    {% endblock %}
 </html>
