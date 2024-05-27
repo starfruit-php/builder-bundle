@@ -70,19 +70,6 @@ Basic field in SEO Scroing result:
 
 See [template docs](TEMPLATE.md)
 
-### Update detail views
+### Auto render
 
-See [extension docs](EXTENSION.md)
-
-```bash
-{% extends 'layout/app.html.twig' %}
-
-{% block builder_seo %}
-    {% do builder_seo(item, app.request.locale) %}
-    {{ parent() }}
-{% endblock builder_seo %}
-
-{% block content %}
-....................................
-{% endblock %}
-```
+Adding setup layouts above and SEO DATA will be rendered automatically , or custom setup with functions, see [extension docs](EXTENSION.md)

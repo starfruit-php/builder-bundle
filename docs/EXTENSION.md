@@ -7,4 +7,4 @@
 | `builder_render_image()`  | $image, $class, $thumbnailName  | render img tag |
 | `builder_share_social()`  | $type  | return social share link |
 | `builder_render_editables()`  | $customLayouts  | return editable data from custom layout in twig |
-| `builder_seo()`  | $object, $locale = null  | return seo data |
+| `builder_seo()`  | | add seo data configs |

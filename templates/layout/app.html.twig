@@ -5,9 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-        {{ block("layout_link") }}
-
         {% apply spaceless %}
+            {{ block("layout_link") }}
+
             {# Favicon #}
             {% set favicon = pimcore_website_config('layout_favicon') %}
             {% set favicon = favicon and favicon is instanceof('\\Pimcore\\Model\\Asset\\Image') ? favicon.getFrontendFullPath() : null %}
@@ -27,16 +27,33 @@
                 {% set document = pimcore_document(1) %}
             {% endif %}
 
+            {# SEO #}
+            {% block builder_seo %}
+                {% do builder_seo() %}
+            {% endblock %}
+
             {{ block("layout_head") }}
         {% endapply %}
 
-        {# SEO #}
-        {% block builder_seo %}
+        {% block layout_head_meta deferred %}
             {{ pimcore_head_title() }}
             {{ pimcore_head_meta() }}
+        {% endblock %}
+
+        {% block head_stylesheets deferred %}
             {{ pimcore_head_link() }}
         {% endblock %}
     </head>
 
     {{ block("layout_body") }}
+
+    {# output scripts added before #}
+    {# {% block headscripts deferred %}
+        {{ pimcore_head_script() }}
+    {% endblock %}
+
+
+    {% block inlinescripts deferred %}
+        {{ pimcore_inline_script() }}
+    {% endblock %} #}
 </html>
