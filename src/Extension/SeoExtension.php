@@ -91,22 +91,26 @@ class SeoExtension extends AbstractExtension
             ];
 
             foreach ($metas as $key => $field) {
-                if (isset($data[$field])) {
+                if (isset($data[$field]) && !empty($data[$field])) {
                     $this->headMeta->appendProperty($key, $data[$field]);
                 }
             }
 
-            if (isset($data['title'])) {
-                $this->headTitle->set($data['title']);
+            $field = 'title';
+            if (isset($data[$field]) && !empty($data[$field])) {
+                $this->headTitle->set($data[$field]);
             }
 
-            if (isset($data['description'])) {
-                $this->headMeta->setDescription($data['description']);
+            $field = 'description';
+            if (isset($data[$field]) && !empty($data[$field])) {
+                $this->headMeta->setDescription($data[$field]);
             }
         }
 
         foreach ($schemaData as $schemaTag) {
-            $this->headMeta->addRaw($schemaTag);
+            if (!empty($schemaTag)) {
+                $this->headMeta->addRaw($schemaTag);
+            }
         }
     }
 }
