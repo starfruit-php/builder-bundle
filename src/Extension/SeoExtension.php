@@ -96,7 +96,7 @@ class SeoExtension extends AbstractExtension
                 }
             }
 
-            if (isset($data[$field])) {
+            if (isset($data['title'])) {
                 $this->headTitle->set($data['title']);
             }
 
