@@ -74,6 +74,14 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('mail')
+                    ->children()
+                        ->booleanNode('ignore_debug_mode')
+                            ->info('Ignore debug mode in dev mode while sending mail')
+                            ->defaultFalse()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

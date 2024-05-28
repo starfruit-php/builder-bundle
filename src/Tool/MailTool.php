@@ -4,12 +4,13 @@ namespace Starfruit\BuilderBundle\Tool;
 
 use Pimcore\Mail;
 use Pimcore\Model\Document\Email;
+use Starfruit\BuilderBundle\Config\MailConfig;
 
 class MailTool
 {
-    public static function send($document, $mailAddress, $params, $subject = null)
+    public static function send($document, $mailAddress, $params = [], $subject = null)
     {
-        try {
+        // try {
             if ($mailAddress) {
                 $document = $document instanceof Email ? $document : Email::getByPath($document);
                 $mail = new Mail();
@@ -28,9 +29,12 @@ class MailTool
                     }
                 }
 
+                $mailConfig = new MailConfig;
+                $mail->setIgnoreDebugMode($mailConfig->getIgnoreDebugMode());
+
                 $mail->send();
             }
-        } catch (\Throwable $e) {
-        }
+        // } catch (\Throwable $e) {
+        // }
     }
 }
