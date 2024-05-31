@@ -39,6 +39,11 @@ class NotificationConfig
                       appId: "'. $_ENV['ONESIGNAL_APP_ID'] .'",
                     });
                   });
+
+                  function builderNotificationGetPlayerId()
+                  {
+                    return OneSignal.User.onesignalId;
+                  }
                 </script>
             ';
         }

@@ -18,3 +18,7 @@ starfruit_builder:
 ### OneSignal
 
 Setup with [original documents](https://documentation.onesignal.com/docs/web-push-quickstart), OneSignal scripts will be added automatically.
+
+### PlayerId
+
+Use `builderNotificationGetPlayerId()` function to get player id.
