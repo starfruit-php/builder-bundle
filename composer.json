@@ -13,9 +13,8 @@
       "role":"Developer"
     }
   ],
-  "require":{
-  },
-  "require-dev":{
+  "require": {
+    "onesignal/onesignal-php-api": "dev-main"
   },
   "suggest":{
   },

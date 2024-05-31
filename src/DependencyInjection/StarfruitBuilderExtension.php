@@ -28,5 +28,6 @@ class StarfruitBuilderExtension extends Extension
         $container->setParameter('starfruit_builder.object', $config['link_generate_objects'] ?? null);
         $container->setParameter('starfruit_builder.seo', $config['seo'] ?? null);
         $container->setParameter('starfruit_builder.mail', $config['mail'] ?? null);
+        $container->setParameter('starfruit_builder.notification', $config['notification'] ?? null);
     }
 }

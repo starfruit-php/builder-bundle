@@ -58,6 +58,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
 
+    Starfruit\BuilderBundle\EventListener\PushNotificationListener:
+        public: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -108 }
+
     Starfruit\BuilderBundle\EventListener\Admin\StyleListener:
         tags:
             - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.css, method: addCSSFiles }

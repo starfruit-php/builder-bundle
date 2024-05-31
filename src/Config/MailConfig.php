@@ -7,7 +7,6 @@ class MailConfig
     const CONFIG_NAME = 'starfruit_builder.mail';
 
     private $config;
-    private $imageThumbnail;
 
     public function __construct()
     {
