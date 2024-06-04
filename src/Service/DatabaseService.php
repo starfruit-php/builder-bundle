@@ -24,7 +24,7 @@ class DatabaseService
             `destinationUrl` varchar(255) DEFAULT NULL,
             `schemaBlock` longtext DEFAULT NULL,
             `image` varchar(255) DEFAULT NULL,
-            `imageAsset` varchar(255) DEFAULT NULL,
+            `imageAsset` int(11) DEFAULT NULL,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
@@ -44,7 +44,7 @@ class DatabaseService
             ADD COLUMN IF NOT EXISTS `destinationUrl` varchar(255) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `schemaBlock` longtext DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `image` varchar(255) DEFAULT NULL,
-            ADD COLUMN IF NOT EXISTS `imageAsset` varchar(255) DEFAULT NULL
+            ADD COLUMN IF NOT EXISTS `imageAsset` int(11) DEFAULT NULL
         ";
 
         Db::get()->executeQuery($query);

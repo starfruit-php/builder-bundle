@@ -33,7 +33,7 @@ class Seo extends AbstractModel
     public ?string $destinationUrl = null;
     public ?string $schemaBlock = null;
     public ?string $image = null;
-    public ?string $imageAsset = null;
+    public ?int $imageAsset = null;
 
     public static function getById(int $id): ?self
     {
@@ -352,12 +352,12 @@ class Seo extends AbstractModel
         return $this->image;
     }
 
-    public function setImageAsset(?string $imageAsset): void
+    public function setImageAsset(?int $imageAsset): void
     {
         $this->imageAsset = $imageAsset;
     }
 
-    public function getImageAsset(): ?string
+    public function getImageAsset(): ?int
     {
         return $this->imageAsset;
     }
