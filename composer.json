@@ -14,7 +14,6 @@
     }
   ],
   "require": {
-    "onesignal/onesignal-php-api": "dev-main"
   },
   "suggest":{
   },
