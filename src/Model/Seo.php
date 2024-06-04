@@ -3,11 +3,15 @@
 namespace Starfruit\BuilderBundle\Model;
 
 use Pimcore\Model\AbstractModel;
+use Pimcore\Model\Document;
+use Pimcore\Model\Asset\Image;
 use Pimcore\Model\Exception\NotFoundException;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
 use Starfruit\BuilderBundle\Seo\SeoScore;
 use Starfruit\BuilderBundle\Seo\SeoSchema;
+use Starfruit\BuilderBundle\Config\SeoConfig;
+use Starfruit\BuilderBundle\Tool\AssetTool;
 
 class Seo extends AbstractModel
 {
@@ -28,6 +32,8 @@ class Seo extends AbstractModel
     public ?string $redirectType = null;
     public ?string $destinationUrl = null;
     public ?string $schemaBlock = null;
+    public ?string $image = null;
+    public ?string $imageAsset = null;
 
     public static function getById(int $id): ?self
     {
@@ -55,7 +61,7 @@ class Seo extends AbstractModel
             if (!$obj) {
                 $obj = new self;
                 $obj->setElement($element->getId());
-                $obj->setElementType($element->getType());
+                $obj->setElementType($element->getType() == self::OBJECT_TYPE ? self::OBJECT_TYPE : self::DOCUMENT_TYPE);
                 $obj->setLanguage($language);
 
                 $obj->save();
@@ -128,7 +134,27 @@ class Seo extends AbstractModel
             return $this->getObjectSeoData();
         }
 
+        if ($this->elementType == self::DOCUMENT_TYPE) {
+            return $this->getDocumentSeoData();
+        }
+
         return null;
+    }
+
+    private function renderImage()
+    {
+        $image = $this->image;
+        if ($this->imageAsset) {
+            $asset = Image::getById($this->imageAsset);
+
+            if ($asset) {
+                $seoConfig = new SeoConfig;
+                $thumbnail = $seoConfig->getImageThumbnail();
+                $image = AssetTool::getFrontendFullPath($asset, $thumbnail);
+            }
+        }
+
+        return $image;
     }
 
     private function getObjectScoring(): ?array
@@ -152,6 +178,17 @@ class Seo extends AbstractModel
         return $seoScore->scoring();
     }
 
+    private function getDocumentSeoData(): ?array
+    {
+        $document = Document::getById($this->element);
+        $title = $this->title ?: $document->getTitle();
+        $description = $this->description ?: $document->getDescription();
+        $slug = $document->getUrl();
+        $image = $this->renderImage();
+
+        return compact('title', 'description', 'image', 'slug');
+    }
+
     private function getObjectSeoData(): ?array
     {
         $objectConfig = new ObjectConfig($this->element, $this->language);
@@ -170,7 +207,7 @@ class Seo extends AbstractModel
 
         $title = $this->title ?: $seoData['title'];
         $description = $this->description ?: $seoData['description'];
-        $image = $seoData['image'];
+        $image = $this->renderImage() ?: $seoData['image'];
 
         return compact('title', 'description', 'image', 'slug');
     }
@@ -303,6 +340,26 @@ class Seo extends AbstractModel
     public function getSchemaBlock(): ?string
     {
         return $this->schemaBlock;
+    }
+
+    public function setImage(?string $image): void
+    {
+        $this->image = $image;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImageAsset(?string $imageAsset): void
+    {
+        $this->imageAsset = $imageAsset;
+    }
+
+    public function getImageAsset(): ?string
+    {
+        return $this->imageAsset;
     }
 
     public function setId(?int $id): void

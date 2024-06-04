@@ -57,13 +57,8 @@ class SeoExtension extends AbstractExtension
             }
 
             if ($document instanceof Document\Page) {
-                $dataSeo = [
-                    'title' => $document->getTitle(),
-                    'description' => $document->getDescription(),
-                    'url' => $document->getUrl(),
-                ];
-
-                $this->renderSeo($dataSeo);
+                $seo = Seo::getOrCreate($document, $this->locale);
+                $this->renderSeo($seo->getSeoData(), $seo->getSchemaData());
             }
         }
     }
@@ -85,7 +80,7 @@ class SeoExtension extends AbstractExtension
                 "og:description" => "description",
                 "og:image" => "image",
                 "og:image:alt" => "title",
-                "og:url" => "url",
+                "og:url" => "slug",
                 "twitter:title" => "title",
                 "twitter:description" => "description",
             ];
