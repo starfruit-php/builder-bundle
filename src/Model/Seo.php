@@ -18,6 +18,8 @@ class Seo extends AbstractModel
     const OBJECT_TYPE = 'object';
     const DOCUMENT_TYPE = 'document';
 
+    const FULL_FIELDS = ['indexing', 'nofollow', 'canonicalUrl', 'redirectLink', 'redirectType', 'destinationUrl', 'schemaBlock'];
+
     public ?int $id = null;
     public ?string $elementType = null;
     public ?int $element = null;
@@ -114,10 +116,10 @@ class Seo extends AbstractModel
         return null;
     }
 
-    public function getScoring()
+    public function getScoring($getFullFields = false)
     {
         if ($this->elementType == self::OBJECT_TYPE) {
-            return $this->getObjectScoring();
+            return $this->getObjectScoring($getFullFields);
         }
 
         return null;
@@ -157,7 +159,7 @@ class Seo extends AbstractModel
         return $image;
     }
 
-    private function getObjectScoring(): ?array
+    private function getObjectScoring($getFullFields = false): ?array
     {
         $objectConfig = new ObjectConfig($this->element, $this->language);
 
@@ -174,8 +176,17 @@ class Seo extends AbstractModel
         $keyword = $this->getKeyword();
 
         $seoScore = new SeoScore($title, $description, $content, $keyword, $slug);
+        $scoring = $seoScore->scoring();
 
-        return $seoScore->scoring();
+        $fullFields = [];
+        if ($getFullFields) {
+            foreach (self::FULL_FIELDS as $field) {
+                $fullFields[$field] = $this->{$field};
+            }
+        }
+        $scoring['fullFields'] = $fullFields;
+
+        return $scoring;
     }
 
     private function getDocumentSeoData(): ?array
