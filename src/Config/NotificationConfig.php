@@ -30,7 +30,6 @@ class NotificationConfig
             }
 
             $codeHead = '
-                <!-- Builder Scripts -->
                 <script src="'. $sdkLink .'" defer></script>
                 <script>
                   window.OneSignalDeferred = window.OneSignalDeferred || [];

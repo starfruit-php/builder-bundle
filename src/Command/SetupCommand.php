@@ -36,11 +36,11 @@ class SetupCommand extends AbstractCommand
         $update = $input->getOption('update');
 
         if ((bool) $update) {
-            $this->writeInfo("RUN: Update table builder_seo");
-            DatabaseService::updateBuilderSeo();
+            $this->writeInfo("RUN: Update Builder tables");
+            DatabaseService::updateTables();
         } else {
-            $this->writeInfo("RUN: Create table builder_seo");
-            DatabaseService::createBuilderSeo();
+            $this->writeInfo("RUN: Create Builder tables");
+            DatabaseService::createTables();
         }
 
         $this->writeInfo("RUN: Clear all cache");

@@ -12,7 +12,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class PushNotificationListener
+use Starfruit\BuilderBundle\Model\Option;
+use Starfruit\BuilderBundle\Config\NotificationConfig;
+
+class InsertCodeToViewListener
 {
     use ResponseInjectionTrait;
     use PimcoreContextAwareTrait;
@@ -47,14 +50,21 @@ class PushNotificationListener
             return;
         }
 
-        $config = new \Starfruit\BuilderBundle\Config\NotificationConfig;
-        $codeHead = $config->getCodeHead();
-        $codeBody = '';
+        $codeHead = Option::getCodeHead();
+        $codeBody = Option::getCodeBody();
+
+        $config = new NotificationConfig;
+        $codeHead .= $config->getCodeHead();
 
         $content = $response->getContent();
 
         if (!empty($codeHead)) {
-            // search for the end <head> tag, and insert the google tag manager code before
+            $codeHead = '
+                <!-- Builder CodeHead -->
+                    '. $codeHead .'
+                <!-- END Builder CodeHead -->';
+
+            // search for the end <head> tag, and insert code before
             // this method is much faster than using simple_html_dom and uses less memory
             $headEndPosition = stripos($content, '</head>');
             if ($headEndPosition !== false) {
@@ -63,6 +73,11 @@ class PushNotificationListener
         }
 
         if (!empty($codeBody)) {
+            $codeBody = '
+                <!-- Builder CodeBody -->
+                    '. $codeBody .'
+                <!-- END Builder CodeBody -->';
+
             // insert code after the opening <body> tag
             $content = preg_replace('@<body(>|.*?[^?]>)@', "<body$1\n\n" . $codeBody, $content);
         }

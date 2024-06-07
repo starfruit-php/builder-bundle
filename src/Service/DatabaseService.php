@@ -3,12 +3,28 @@
 namespace Starfruit\BuilderBundle\Service;
 
 use Pimcore\Db;
+use Starfruit\BuilderBundle\Model\Option;
 
 class DatabaseService
 {
+    const BUILDER_SEO_TABLE = 'builder_seo';
+    const BUILDER_OPTIONS_TABLE = 'builder_options';
+
+    public static function createTables()
+    {
+        self::createBuilderSeo();
+        self::createBuilderOptions();
+    }
+
+    public static function updateTables()
+    {
+        self::createTables();
+        self::updateBuilderSeo();
+    }
+
     public static function createBuilderSeo()
     {
-        $query = "CREATE TABLE IF NOT EXISTS `builder_seo` (
+        $query = "CREATE TABLE IF NOT EXISTS " . self::BUILDER_SEO_TABLE . " (
             `id` int(11) NOT NULL AUTO_INCREMENT,
             `elementType` varchar(255) NOT NULL,
             `element` int(11) NOT NULL,
@@ -31,10 +47,38 @@ class DatabaseService
         Db::get()->executeQuery($query);
     }
 
+    public static function createBuilderOptions()
+    {
+        $query = "
+        CREATE TABLE IF NOT EXISTS " . self::BUILDER_OPTIONS_TABLE . " (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) NOT NULL,
+            `content` longtext DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ALTER TABLE `builder_options` ADD PRIMARY KEY (`name`);
+        COMMIT;";
+
+        Db::get()->executeQuery($query);
+
+        // insert default name
+        try {
+            $query = "INSERT INTO " . self::BUILDER_OPTIONS_TABLE . "(`name`, `content`) VALUES (?, ?), (?, ?)";
+
+            Db::get()->executeQuery($query, [
+                Option::CODE_HEAD_NAME,
+                null,
+                Option::CODE_BODY_NAME,
+                null
+            ]);
+
+        } catch (Exception $e) {
+            
+        }
+    }
+
     public static function updateBuilderSeo()
     {
-        self::createBuilderSeo();
-
         $query = "ALTER TABLE `builder_seo`
             ADD COLUMN IF NOT EXISTS `indexing` tinyint(1) DEFAULT 0,
             ADD COLUMN IF NOT EXISTS `nofollow` tinyint(1) DEFAULT 0,

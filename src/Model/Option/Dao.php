@@ -1,6 +1,6 @@
 <?php
 
-namespace Starfruit\BuilderBundle\Model\Seo;
+namespace Starfruit\BuilderBundle\Model\Option;
 
 use Pimcore\Model\Dao\AbstractDao;
 use Pimcore\Model\Exception\NotFoundException;
@@ -8,7 +8,7 @@ use Starfruit\BuilderBundle\Service\DatabaseService;
 
 class Dao extends AbstractDao
 {
-    protected string $tableName = DatabaseService::BUILDER_SEO_TABLE;
+    protected string $tableName = DatabaseService::BUILDER_OPTIONS_TABLE;
 
     public function getById(?int $id = null): void
     {
@@ -19,21 +19,20 @@ class Dao extends AbstractDao
         $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE id = ?', [$this->model->getId()]);
 
         if (!$data) {
-            throw new NotFoundException("Builder SEO with the ID " . $this->model->getId() . " doesn't exists");
+            throw new NotFoundException("Builder Options with the ID " . $this->model->getId() . " doesn't exists");
         }
 
         $this->assignVariablesToModel($data);
     }
 
-    public function getByElement(?int $element, $language): void
+    public function getByName(?string $name): void
     {
-        $this->model->setElement($element);
-        $this->model->setLanguage($language);
+        $this->model->setName($name);
 
-        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ? AND language = ?', [$this->model->getElement(), $this->model->getLanguage()]);
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE name = ?', [$this->model->getName()]);
 
         if (!$data) {
-            throw new NotFoundException("Builder SEO with the element " . $this->model->getElement() . " doesn't exists");
+            throw new NotFoundException("Builder Options with the name " . $this->model->getName() . " doesn't exists");
         }
 
         $this->assignVariablesToModel($data);

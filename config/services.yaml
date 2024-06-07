@@ -54,11 +54,15 @@ services:
         tags:
             - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: preUpdate }
 
+    Starfruit\BuilderBundle\EventListener\Document\InsertCodeToViewListener:
+        tags:
+            - { name: kernel.event_listener, event: pimcore.document.postUpdate, method: postUpdate }
+
     Starfruit\BuilderBundle\EventListener\ControllerListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller }
 
-    Starfruit\BuilderBundle\EventListener\PushNotificationListener:
+    Starfruit\BuilderBundle\EventListener\InsertCodeToViewListener:
         public: true
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -108 }
