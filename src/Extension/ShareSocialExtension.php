@@ -27,7 +27,7 @@ class ShareSocialExtension extends AbstractExtension
     {
         $type = strtolower($type);
         if (in_array($type, self::ALLOW_TYPES)) {
-            $url = ($_SERVER['HTTPS'] == "on" ? "https://" : "http://") . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            $url = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 
             $link = null;
             switch ($type) {
