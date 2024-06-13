@@ -1,5 +1,9 @@
 # PUSH NOTIFICATION
 
+## Install lib
+
+[See docs](https://packagist.org/packages/onesignal/onesignal-php-api)
+
 ## Custom config
 
 ```bash
