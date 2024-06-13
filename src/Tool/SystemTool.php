@@ -3,6 +3,7 @@
 namespace Starfruit\BuilderBundle\Tool;
 
 use Symfony\Component\HttpFoundation\Request;
+use Starfruit\BuilderBundle\Model\Option;
 
 class SystemTool
 {
@@ -19,7 +20,20 @@ class SystemTool
 
     public static function getDomain()
     {
-        return self::getRequest()->getSchemeAndHttpHost();
+        return Option::getMainDomain() ?: self::getRequest()->getSchemeAndHttpHost();
+    }
+
+    public static function getHost()
+    {
+        $domain = self::getDomain();
+        if ($domain) {
+            $hosts = parse_url($domain);
+            if (isset($hosts['host']) && $hosts['host']) {
+                return $hosts['host'];
+            }
+        }
+
+        return self::getRequest()->getHost();
     }
 
     public static function getUrl($path)

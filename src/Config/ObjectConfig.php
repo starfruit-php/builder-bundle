@@ -36,13 +36,24 @@ class ObjectConfig
         $this->locale = $locale ?: LanguageTool::getLocale();
         $this->seoFields = [];
         $this->object = $object;
-        $this->className = $object->getClassName();
+        $this->className = $object?->getClassName();
         $this->setup();
     }
 
     public function valid()
     {
         return $this->valid;
+    }
+
+    public static function getListClass()
+    {
+        return \Pimcore::getContainer()->getParameter(self::CONFIG_NAME);
+    }
+
+    public static function getListClassName()
+    {
+        $classConfig = self::getListClass();
+        return array_column($classConfig, 'class_name');
     }
 
     public function setSlug()
@@ -139,15 +150,15 @@ class ObjectConfig
 
     private function getConfig()
     {
-        $config = \Pimcore::getContainer()->getParameter(self::CONFIG_NAME);
-        $classNames = array_column($config, 'class_name');
+        $classConfig = self::getListClass();
+        $classNames = self::getListClassName();
 
-        if (!in_array($this->className, $classNames)) {
+        if (is_null($this->className) || !in_array($this->className, $classNames)) {
             $this->valid = false;
             return null;
         }
 
-        return $config[array_keys($config)[array_search($this->className, $classNames)]];
+        return $classConfig[array_keys($classConfig)[array_search($this->className, $classNames)]];
     }
 
     private function setup()

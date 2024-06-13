@@ -60,21 +60,6 @@ class DatabaseService
         COMMIT;";
 
         Db::get()->executeQuery($query);
-
-        // insert default name
-        try {
-            $query = "INSERT INTO " . self::BUILDER_OPTIONS_TABLE . "(`name`, `content`) VALUES (?, ?), (?, ?)";
-
-            Db::get()->executeQuery($query, [
-                Option::CODE_HEAD_NAME,
-                null,
-                Option::CODE_BODY_NAME,
-                null
-            ]);
-
-        } catch (Exception $e) {
-            
-        }
     }
 
     public static function updateBuilderSeo()

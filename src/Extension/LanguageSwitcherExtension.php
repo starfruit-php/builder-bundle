@@ -12,6 +12,7 @@ use Pimcore\Model\Document\Service;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Data\UrlSlug;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
+use Starfruit\BuilderBundle\Tool\LanguageTool;
 
 class LanguageSwitcherExtension extends AbstractExtension
 {
@@ -36,7 +37,7 @@ class LanguageSwitcherExtension extends AbstractExtension
 
     public function getLocalizedLinks(Document $document)
     {
-        $languages = Tool::getValidLanguages();
+        $languages = LanguageTool::getList();
 
         $mainRequest =  $this->requestStack?->getMainRequest();
         $document = $mainRequest?->attributes?->get('contentDocument') ?: $document;
@@ -104,7 +105,7 @@ class LanguageSwitcherExtension extends AbstractExtension
     public function getLanguageFlag($language)
     {
         $flag = '';
-        if (Tool::isValidLanguage($language)) {
+        if (LanguageTool::isValid($language)) {
             $flag = self::getLanguageFlagFile($language);
         }
         $flag = preg_replace('@^' . preg_quote(PIMCORE_WEB_ROOT, '@') . '@', '', $flag);

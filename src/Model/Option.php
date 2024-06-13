@@ -17,6 +17,7 @@ class Option extends AbstractModel
 {
     const CODE_HEAD_NAME = 'code_head';
     const CODE_BODY_NAME = 'code_body';
+    const MAIN_DOMAIN_NAME = 'main_domain';
 
     public ?int $id = null;
     public ?string $name = null;
@@ -50,7 +51,7 @@ class Option extends AbstractModel
         return null;
     }
 
-    public static function getOrCreate(?string $name, ?string $content = null): ?self
+    public static function getOrCreate(?string $name): ?self
     {
         try {
             $obj = self::getByName($name);
@@ -58,7 +59,6 @@ class Option extends AbstractModel
             if (!$obj) {
                 $obj = new self;
                 $obj->setName($name);
-                $obj->setContent($content);
 
                 $obj->save();
             }
@@ -74,27 +74,33 @@ class Option extends AbstractModel
 
     public static function setCodeHead(?string $content): void
     {
-        $obj = self::getByName(self::CODE_HEAD_NAME);
+        $obj = self::getOrCreate(self::CODE_HEAD_NAME);
         $obj->setContent($content);
         $obj->save();
     }
 
     public static function getCodeHead(): ?string
     {
-        $obj = self::getByName(self::CODE_HEAD_NAME);
+        $obj = self::getOrCreate(self::CODE_HEAD_NAME);
         return $obj->getContent();
     }
 
     public static function setCodeBody(?string $content): void
     {
-        $obj = self::getByName(self::CODE_BODY_NAME);
+        $obj = self::getOrCreate(self::CODE_BODY_NAME);
         $obj->setContent($content);
         $obj->save();
     }
 
     public static function getCodeBody(): ?string
     {
-        $obj = self::getByName(self::CODE_BODY_NAME);
+        $obj = self::getOrCreate(self::CODE_BODY_NAME);
+        return $obj->getContent();
+    }
+
+    public static function getMainDomain(): ?string
+    {
+        $obj = self::getOrCreate(self::MAIN_DOMAIN_NAME);
         return $obj->getContent();
     }
     
