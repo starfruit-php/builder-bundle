@@ -7,6 +7,7 @@ use Twig\Extension\AbstractExtension;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Pimcore\Twig\Extension\Templating\HeadMeta;
 use Pimcore\Twig\Extension\Templating\HeadTitle;
+use Pimcore\Twig\Extension\Templating\Placeholder;
 use Pimcore\Model\Document;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Data\UrlSlug;
@@ -21,6 +22,7 @@ class SeoExtension extends AbstractExtension
     public function __construct(
         protected HeadMeta $headMeta,
         protected HeadTitle $headTitle,
+        protected Placeholder $headLink,
         protected RequestStack $requestStack
     ) {
     }
@@ -100,6 +102,17 @@ class SeoExtension extends AbstractExtension
             if (isset($data[$field]) && !empty($data[$field])) {
                 $this->headMeta->setDescription($data[$field]);
             }
+
+            $indexFollow = [
+                $data['index'] ? 'index' : 'noindex',
+                $data['nofollow'] ? 'nofollow' : 'follow',
+            ];
+            $indexFollowContent = implode(',', $indexFollow);
+            $this->headMeta->addRaw('<meta name="robots" content="' . $indexFollowContent . '">');
+            $this->headMeta->addRaw('<meta name="googlebot" content="' . $indexFollowContent . '">');
+
+            $canonicalUrl = $data['canonicalUrl'] ?: $data['slug'];
+            $this->headMeta->addRaw('<link rel="canonical" href="' . $canonicalUrl . '" />');
         }
 
         foreach ($schemaData as $schemaTag) {

@@ -132,15 +132,24 @@ class Seo extends AbstractModel
 
     public function getSeoData(): ?array
     {
+        $defaultData = [
+            'index' => $this->indexing,
+            'nofollow' => $this->nofollow,
+            'canonicalUrl' => $this->canonicalUrl,
+        ];
+
+        $seoData = [];
         if ($this->elementType == self::OBJECT_TYPE) {
-            return $this->getObjectSeoData();
+            $seoData = $this->getObjectSeoData();
         }
 
         if ($this->elementType == self::DOCUMENT_TYPE) {
-            return $this->getDocumentSeoData();
+            $seoData = $this->getDocumentSeoData();
         }
 
-        return null;
+        $seoData = array_merge($defaultData, $seoData);
+
+        return $seoData;
     }
 
     private function renderImage()
