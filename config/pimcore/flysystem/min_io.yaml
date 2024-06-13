@@ -12,7 +12,7 @@ services:
     assets_s3:
         class: 'Aws\S3\S3Client'
         arguments:
-            -   endpoint: '%env(string:ASSET_AWS_S3_ENDPOINT)%'
+            -   endpoint: '%env(string:ASSET_AWS_S3_URL)%'
                 region: '%env(string:ASSET_AWS_S3_REGION)%'
                 version: 'latest'
                 credentials:
