@@ -38,37 +38,30 @@ class Generator extends AbstractElementGenerator
         // it contains at least the url container, but you can add additional data
         // with the params parameter
         $context = new GeneratorContext($urlContainer, $section, ['foo' => 'bar']);
-
         $hostname = SystemTool::getHost();
 
-        // dd($_SERVER);
+        if ($hostname) {
+            foreach ($list as $item) {
+                $link = $item->getUrl($hostname);
 
-        foreach ($list as $item) {
-            // $link = $item->getUrl("builder.localhost");
+                if (empty($link)) {
+                    continue;
+                }
 
-            if ($item->getPrettyUrl()) {
-                $link = $item->getPrettyUrl();
-            } else {
-                $link = $item->getFullPath();
+                // create an entry for the sitemap
+                $url = new UrlConcrete($link);
+
+                // run url through processors
+                $url = $this->process($url, $item, $context);
+
+                // processors can return null to exclude the url
+                if (null === $url) {
+                    continue;
+                }
+
+                // add the url to the container
+                $urlContainer->addUrl($url, $section);
             }
-
-            if (empty($link)) {
-                continue;
-            }
-
-            // create an entry for the sitemap
-            $url = new UrlConcrete($link);
-
-            // run url through processors
-            $url = $this->process($url, $item, $context);
-
-            // processors can return null to exclude the url
-            if (null === $url) {
-                continue;
-            }
-
-            // add the url to the container
-            $urlContainer->addUrl($url, $section);
         }
 
         $sitemapKeys = Setting::getSitemapKeys();
@@ -83,7 +76,7 @@ class Generator extends AbstractElementGenerator
             $class = $classConfig['class_name'];
             $section = strtolower($class);
 
-            if (in_array($section, $sitemapKeys)) {
+            if (!in_array($section, $sitemapKeys)) {
                 continue;
             }
 
