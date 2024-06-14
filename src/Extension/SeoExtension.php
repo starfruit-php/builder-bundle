@@ -111,7 +111,7 @@ class SeoExtension extends AbstractExtension
             $this->headMeta->addRaw('<meta name="robots" content="' . $indexFollowContent . '">');
             $this->headMeta->addRaw('<meta name="googlebot" content="' . $indexFollowContent . '">');
 
-            $canonicalUrl = $data['canonicalUrl'] ?: (isset($data['slug']) ? $data['slug'] : '');
+            $canonicalUrl = $data['canonicalUrl'] ?: $data['slug'];
             $this->headMeta->addRaw('<link rel="canonical" href="' . $canonicalUrl . '" />');
         }
 

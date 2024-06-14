@@ -12,6 +12,7 @@ use Starfruit\BuilderBundle\Seo\SeoScore;
 use Starfruit\BuilderBundle\Seo\SeoSchema;
 use Starfruit\BuilderBundle\Config\SeoConfig;
 use Starfruit\BuilderBundle\Tool\AssetTool;
+use Starfruit\BuilderBundle\Tool\SystemTool;
 
 class Seo extends AbstractModel
 {
@@ -136,6 +137,10 @@ class Seo extends AbstractModel
             'index' => $this->indexing,
             'nofollow' => $this->nofollow,
             'canonicalUrl' => $this->canonicalUrl,
+            'title' => '',
+            'description' => '',
+            'image' => '',
+            'slug' => ''
         ];
 
         $seoData = [];
@@ -223,7 +228,7 @@ class Seo extends AbstractModel
             return [];
         }
 
-        $slug = $objectConfig->getSlug();
+        $slug = SystemTool::getUrl($objectConfig->getSlug());
 
         $title = $this->title ?: $seoData['title'];
         $description = $this->description ?: $seoData['description'];
