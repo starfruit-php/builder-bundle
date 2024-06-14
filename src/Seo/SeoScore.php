@@ -273,21 +273,31 @@ class SeoScore
 
     private function scoreLink(): ?array
     {
+        $link = [
+            'total' => 0,
+        ];
+
         $pattern = '/<a\s+[^>]*href="(http|https):\/\/([^"]+)"[^>]*>/i';
         $external = SeoHelper::getCount($pattern, $this->content);
+        $link['external'] = self::scoreTimes($external);
 
         $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*>/i';
         $total = SeoHelper::getCount($pattern, $this->content);
 
+        $link['total'] = $total;
+
         $internal = $total - $external;
+        $link['internal'] = self::scoreTimes($internal);
 
         $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*rel="[^>]*nofollow[^>]*"[^>]*>/i';
         $nofollow = SeoHelper::getCount($pattern, $this->content);
+        $link['nofollow'] = self::scoreTimes($nofollow);
 
         $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*rel="[^>]*dofollow[^>]*"[^>]*>/i';
         $dofollow = SeoHelper::getCount($pattern, $this->content);
+        $link['nofollow'] = self::scoreTimes($nofollow);
 
-        return compact('total', 'internal', 'external', 'nofollow', 'dofollow');
+        return $link;
     }
 
     private function checkUrl($url): ?array

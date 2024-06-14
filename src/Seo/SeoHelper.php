@@ -68,25 +68,6 @@ class SeoHelper
         return self::getCount($pattern, $string);
     }
 
-    public static function countLink($string): ?array
-    {
-        $pattern = '/<a\s+[^>]*href="\/([^"]+)"[^>]*>/i';
-        $internal = self::getCount($pattern, $string);
-
-        $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*>/i';
-        $total = self::getCount($pattern, $string);
-
-        $external = $total - $internal;
-
-        $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*rel="[^>]*nofollow[^>]*"[^>]*>/i';
-        $nofollow = self::getCount($pattern, $string);
-
-        $pattern = '/<a\s+[^>]*href="([^"]+)"[^>]*rel="[^>]*dofollow[^>]*"[^>]*>/i';
-        $dofollow = self::getCount($pattern, $string);
-
-        return compact('total', 'internal', 'external', 'nofollow', 'dofollow');
-    }
-
     // concat content of multiple tags 
     public static function getAllValues($pattern, $string, $position = 0): ?string
     {
