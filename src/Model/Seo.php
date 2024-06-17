@@ -3,6 +3,7 @@
 namespace Starfruit\BuilderBundle\Model;
 
 use Pimcore\Model\AbstractModel;
+use Pimcore\Model\DataObject;
 use Pimcore\Model\Document;
 use Pimcore\Model\Asset\Image;
 use Pimcore\Model\Exception\NotFoundException;
@@ -59,6 +60,13 @@ class Seo extends AbstractModel
                 $language = LanguageTool::getLocale();
             }
 
+            if ($element instanceof DataObject) {
+                $objectConfig = new ObjectConfig($element, $language);
+                if (!$objectConfig->valid()) {
+                    return null;
+                }
+            }
+
             $obj = self::getByElement($element, $language);
 
             if (!$obj) {
@@ -66,6 +74,8 @@ class Seo extends AbstractModel
                 $obj->setElement($element->getId());
                 $obj->setElementType($element->getType() == self::OBJECT_TYPE ? self::OBJECT_TYPE : self::DOCUMENT_TYPE);
                 $obj->setLanguage($language);
+                $obj->setIndexing(true);
+                $obj->setNofollow(false);
 
                 $obj->save();
             }
@@ -79,7 +89,7 @@ class Seo extends AbstractModel
         return null;
     }
 
-    public static function getByElement($element, $language = null): ?self
+    private static function getByElement($element, $language = null): ?self
     {
         try {
             if (!$language) {

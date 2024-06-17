@@ -13,6 +13,7 @@ use Starfruit\BuilderBundle\LinkGenerator\AbstractLinkGenerator;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
 use Starfruit\BuilderBundle\Tool\SystemTool;
+use Starfruit\BuilderBundle\Service\SitemapService;
 
 class Generator extends AbstractElementGenerator
 {
@@ -20,7 +21,8 @@ class Generator extends AbstractElementGenerator
         protected LocaleServiceInterface $localeService,
         protected AbstractLinkGenerator $abstractLinkGenerator,
         array $filters = [],
-        array $processors = []
+        array $processors = [],
+        array $languages = []
     )
     {
         parent::__construct($filters, $processors);
@@ -28,49 +30,47 @@ class Generator extends AbstractElementGenerator
 
     public function populate(UrlContainerInterface $urlContainer, ?string $section = null): void
     {
-        $section = "default";
+        if ($section) {
+            if ($section == SitemapService::PAGE_SECTION_NAME) {
+                $this->populateWithPage($urlContainer);
+            } else {
+                $this->populateWithObjects($urlContainer, $section);
+            }
+        } else {
+            $this->populateWithPage($urlContainer);
+            $this->populateWithObjects($urlContainer);
+        }
+    }
+
+    private function populateWithPage($urlContainer)
+    {
+        $section = SitemapService::PAGE_SECTION_NAME;
         $list = new Document\Listing();
         $list->setCondition("`type` = 'page'");
         $list->setOrderKey('modificationDate');
         $list->setOrder('DESC');
 
-        // the context contains metadata for filters/processors
-        // it contains at least the url container, but you can add additional data
-        // with the params parameter
-        $context = new GeneratorContext($urlContainer, $section, ['foo' => 'bar']);
         $hostname = SystemTool::getHost();
-
         if ($hostname) {
             foreach ($list as $item) {
                 $link = $item->getUrl($hostname);
-
-                if (empty($link)) {
-                    continue;
-                }
-
-                // create an entry for the sitemap
-                $url = new UrlConcrete($link);
-
-                // run url through processors
-                $url = $this->process($url, $item, $context);
-
-                // processors can return null to exclude the url
-                if (null === $url) {
-                    continue;
-                }
-
-                // add the url to the container
-                $urlContainer->addUrl($url, $section);
+                $link = explode($hostname, $link)[1];
+                $this->addUrl($urlContainer, $link, $item, $section);
             }
         }
+    }
 
+    private function populateWithObjects($urlContainer, $section = null)
+    {
         $sitemapKeys = Setting::getSitemapKeys();
         if (empty($sitemapKeys)) {
             return;
         }
 
+        $sitemapKeys = $section ? [strtolower($section)] : $sitemapKeys;
+
         $classConfigs = ObjectConfig::getListClass();
-        $languages = LanguageTool::getList();
+        $this->languages = LanguageTool::getList();
 
         foreach ($classConfigs as $key => $classConfig) {
             $class = $classConfig['class_name'];
@@ -80,48 +80,62 @@ class Generator extends AbstractElementGenerator
                 continue;
             }
 
-            $list = call_user_func_array('\\Pimcore\\Model\\DataObject\\'. $class .'::getList', []);
-            $list->setOrderKey('modificationDate');
-            $list->setOrder('DESC');
-
-            // the context contains metadata for filters/processors
-            // it contains at least the url container, but you can add additional data
-            // with the params parameter
-            $context = new GeneratorContext($urlContainer, $section, ['foo' => 'bar']);
-
-            foreach ($languages as $language) {
-                //change locale as per multilingual setup
-                $this->localeService->setLocale($language);
-
-                foreach ($list as $object) {
-                    // only add element if it is not filtered
-                    if (!$this->canBeAdded($object, $context)) {
-                        continue;
-                    }
-
-                    // use a link generator to generate an URL
-                    // you need to make sure the link generator generates an absolute url
-                    $link = $this->abstractLinkGenerator->generate($object);
-
-                    if (empty($link)) {
-                        continue;
-                    }
-
-                    // create an entry for the sitemap
-                    $url = new UrlConcrete($link);
-
-                    // run url through processors
-                    $url = $this->process($url, $object, $context);
-
-                    // processors can return null to exclude the url
-                    if (null === $url) {
-                        continue;
-                    }
-
-                    // add the url to the container
-                    $urlContainer->addUrl($url, $section);
-                }
-            } 
+            $this->populateWithObject($urlContainer, $section, $class);
         }
+    }
+
+    private function populateWithObject($urlContainer, $section, $class)
+    {
+        $list = call_user_func_array('\\Pimcore\\Model\\DataObject\\'. $class .'::getList', []);
+        $list->setOrderKey('modificationDate');
+        $list->setOrder('DESC');
+
+        // the context contains metadata for filters/processors
+        // it contains at least the url container, but you can add additional data
+        // with the params parameter
+        $context = new GeneratorContext($urlContainer, $section, ['foo' => 'bar']);
+
+        foreach ($this->languages as $language) {
+            //change locale as per multilingual setup
+            $this->localeService->setLocale($language);
+
+            foreach ($list as $object) {
+                // only add element if it is not filtered
+                if (!$this->canBeAdded($object, $context)) {
+                    continue;
+                }
+
+                // use a link generator to generate an URL
+                // you need to make sure the link generator generates an absolute url
+                $link = $this->abstractLinkGenerator->generate($object);
+                $this->addUrl($urlContainer, $link, $object, $section);
+            }
+        }
+    }
+
+    private function addUrl($urlContainer, $link, $item, $section)
+    {
+        if (empty($link)) {
+            return;
+        }
+
+        // create an entry for the sitemap
+        $url = new UrlConcrete($link);
+
+        // the context contains metadata for filters/processors
+        // it contains at least the url container, but you can add additional data
+        // with the params parameter
+        $context = new GeneratorContext($urlContainer, $section, ['foo' => 'bar']);
+
+        // run url through processors
+        $url = $this->process($url, $item, $context);
+
+        // processors can return null to exclude the url
+        if (null === $url) {
+            return;
+        }
+
+        // add the url to the container
+        $urlContainer->addUrl($url, $section);
     }
 }

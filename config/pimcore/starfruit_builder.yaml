@@ -10,6 +10,8 @@ starfruit_builder:
     #             description:
     #             image:
     #             content:
+    #         sitemap:
+    #             auto_regenerate: true
     # seo:
     #     image_thumbnail: 'seo_thumbnail'
 
@@ -22,6 +24,10 @@ starfruit_builder:
     #     custom_config:
     #         onesignal:
     #             sdk_link:
+
+    # sitemap:
+    #     document:
+    #         auto_regenerate: true
 
     security:
         response:

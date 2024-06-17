@@ -40,3 +40,29 @@ Run command to generate sitemap xml files with above configs:
 ```bash
 ./bin/console builder:sitemap:generate
 ```
+
+## Re-Generate
+
+After updating or deteting, automatically regenerate sitemap file. This flow can switch off with config in `starfruit_builder`, see [example config](../config/pimcore/starfruit_builder.yaml)
+
+```bash
+starfruit_builder:
+    link_generate_objects:
+        news:
+            class_name: News
+            field_create_slug: title
+            field_for_slug: slug
+            update_while_empty: true
+            seo_fields:
+                title: title
+                description: shortText
+                image: image
+                content: contents
+            sitemap:
+                auto_regenerate: false # default true
+    ...
+
+    sitemap:
+        document:
+            auto_regenerate: false # default true
+```

@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 
 use Starfruit\BuilderBundle\Tool\SystemTool;
+use Starfruit\BuilderBundle\Sitemaps\Command;
 
 class GenerateCommand extends AbstractCommand
 {
@@ -30,15 +31,11 @@ class GenerateCommand extends AbstractCommand
         }
         
         try {
-            $command = 'presta:sitemaps:dump --base-url=' . $domain;
-            $process = new Process(explode(' ', 'php ' . str_replace("\\", '/', PIMCORE_PROJECT_ROOT) . '/bin/console ' . $command), null, null, null, 900);
-
-            $process->run();
-
+            Command::dumpSitemap($domain);
 
             $this->writeInfo("Check folder public to get sitemap data");
         } catch (\Throwable $e) {
-            
+            $this->writeError("Something wrong!");
         }
 
         return AbstractCommand::SUCCESS;

@@ -15,7 +15,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Starfruit\BuilderBundle\Model\Option;
 use Starfruit\BuilderBundle\Config\NotificationConfig;
 
-class InsertCodeToViewListener
+class RenderAddCodeListener
 {
     use ResponseInjectionTrait;
     use PimcoreContextAwareTrait;

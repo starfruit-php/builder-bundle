@@ -43,15 +43,18 @@ class SeoExtension extends AbstractExtension
         $mainRequest =  $this->requestStack?->getMainRequest();
         $urlSlug = $mainRequest?->attributes?->get('urlSlug');
 
+        $seo = null;
+
         if ($urlSlug && $urlSlug instanceof UrlSlug) {
             $objectId = $urlSlug->getObjectId();
             $object = DataObject::getById($objectId);
 
             if ($object && $object->getPublished()) {
                 $seo = Seo::getOrCreate($object, $this->locale);
-                $this->renderSeo($seo->getSeoData(), $seo->getSchemaData());
             }
-        } else {
+        }
+
+        if (empty($seo)) {
             $document = $mainRequest?->attributes?->get('contentDocument');
 
             if ($document instanceof Document\Link) {
@@ -60,8 +63,11 @@ class SeoExtension extends AbstractExtension
 
             if ($document instanceof Document\Page) {
                 $seo = Seo::getOrCreate($document, $this->locale);
-                $this->renderSeo($seo->getSeoData(), $seo->getSchemaData());
             }
+        }
+
+        if (!empty($seo)) {
+            $this->renderSeo($seo->getSeoData(), $seo->getSchemaData());
         }
     }
 

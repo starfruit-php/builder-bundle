@@ -6,7 +6,7 @@ use Pimcore\Event\Model\DocumentEvent;
 use Pimcore\Model\Document\Snippet;
 use Starfruit\BuilderBundle\Model\Option;
 
-class InsertCodeToViewListener
+class StoreAddCodeListener
 {
     const EDITMODE_TEMPLATE = "@StarfruitBuilder\config\script.html.twig";
 

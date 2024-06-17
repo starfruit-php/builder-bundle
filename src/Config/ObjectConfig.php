@@ -25,6 +25,7 @@ class ObjectConfig
     private $fieldCreateSlug;
     private $updateWhileEmpty;
 
+    private $sitemap;
     private $seoFields;
 
     // $object is id (int) or object
@@ -43,6 +44,15 @@ class ObjectConfig
     public function valid()
     {
         return $this->valid;
+    }
+
+    public function sitemapAutoGenerate()
+    {
+        if (!empty($this->sitemap) && isset($this->sitemap['auto_regenerate'])) {
+            return $this->sitemap['auto_regenerate'];
+        }
+
+        return true;
     }
 
     public static function getListClass()
@@ -169,6 +179,10 @@ class ObjectConfig
             $this->fieldForSlug = $this->config['field_for_slug'];
             $this->fieldCreateSlug = $this->config['field_create_slug'];
             $this->updateWhileEmpty = $this->config['update_while_empty'];
+
+            if (isset($this->config['sitemap'])) {
+                $this->sitemap = $this->config['sitemap'];
+            }
 
             if (isset($this->config['seo_fields'])) {
                 $this->seoFields = $this->config['seo_fields'];
