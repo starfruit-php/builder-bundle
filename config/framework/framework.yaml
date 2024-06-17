@@ -1,3 +1,8 @@
 imports:
     - { resource: html_sanitizer.yaml }
     - { resource: mailer.yaml, ignore_errors: true }
+
+framework:
+    session:
+        cookie_secure: true
+        cookie_httponly: true

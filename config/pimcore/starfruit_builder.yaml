@@ -1,14 +1,30 @@
-# starfruit_builder:
-#     link_generate_objects:
-#         classid:
-#             class_name: ClassName
-#             field_create_slug: name
-#             field_for_slug: slug
-#             update_while_empty: true
-#             seo_fields:
-#                 title:
-#                 description:
-#                 image:
-#                 content:
-#     seo:
-#         image_thumbnail: 'seo_thumbnail'
+starfruit_builder:
+    # link_generate_objects:
+    #     classid:
+    #         class_name: ClassName
+    #         field_create_slug: name
+    #         field_for_slug: slug
+    #         update_while_empty: true
+    #         seo_fields:
+    #             title:
+    #             description:
+    #             image:
+    #             content:
+    # seo:
+    #     image_thumbnail: 'seo_thumbnail'
+
+    # mail:
+    #     ignore_debug_mode: true
+
+    # notification:
+    #     enable: true
+    #     service: onesignal
+    #     custom_config:
+    #         onesignal:
+    #             sdk_link:
+
+    security:
+        response:
+            remove_headers:
+            custom_hsts_value: 'max-age=7776000'
+            custom_csp_value:

@@ -70,6 +70,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -108 }
 
+    Starfruit\BuilderBundle\EventListener\Security\ResponseListener:
+        public: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: -113 }
+
     Starfruit\BuilderBundle\EventListener\Admin\StyleListener:
         tags:
             - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.css, method: addCSSFiles }
