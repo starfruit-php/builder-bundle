@@ -13,7 +13,7 @@ class SlugListener
         $object = $event->getObject();
         if (!($object instanceof Folder)) {
             $objectConfig = new ObjectConfig($object);
-            $objectConfig->setSlug();
+            $objectConfig->setSlugs();
         }
     }
 }

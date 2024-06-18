@@ -10,7 +10,7 @@ class SitemapConfig
 
     public function __construct()
     {
-        $this->documentAutoGenerate = true;
+        $this->documentAutoGenerate = false;
         $this->setup();
     }
 

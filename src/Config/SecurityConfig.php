@@ -7,6 +7,9 @@ class SecurityConfig
     const CONFIG_NAME = 'starfruit_builder.security';
 
     private $config;
+    private $removeHeaders;
+    private $customHSTS;
+    private $customCSP;
 
     public function __construct()
     {

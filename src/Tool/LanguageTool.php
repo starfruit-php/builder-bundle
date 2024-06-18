@@ -18,4 +18,9 @@ class LanguageTool
     {
         return \Pimcore\Tool::isValidLanguage($language);
     }
+
+    public static function getDefault()
+    {
+        return \Pimcore\Tool::getDefaultLanguage();
+    }
 }

@@ -6,6 +6,32 @@ use Pimcore\Config;
 
 class TextTool
 {
+    public static function str2slug($string, $locale)
+    {
+        // keep character /
+        $values = explode('/', $string);
+        foreach ($values as $key => $value) {
+            $values[$key] = strtolower(self::getPretty($value));
+        }
+        $slug = implode('/', $values);
+
+        // check prefix of slug must include locale, ex. /vi/custom-slug
+        $localeLength = strlen($locale);
+        if (substr($slug, 0, 1) == '/') {
+            if (substr($slug, 0, $localeLength + 2) !== '/' . $locale . '/') {
+                $slug = '/' . $locale . $slug;
+            }
+        } else {
+            if (substr($slug, 0, $localeLength + 1) == $locale . '/') {
+                $slug = '/' . $slug;
+            } else {
+                $slug = '/' . $locale . '/' . $slug;
+            }
+        }
+
+        return $slug;
+    }
+
     public static function getStringAsOneLine($string)
     {
         $string = str_replace("\r\n", ' ', $string);

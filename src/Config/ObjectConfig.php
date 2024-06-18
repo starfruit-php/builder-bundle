@@ -2,7 +2,7 @@
 
 namespace Starfruit\BuilderBundle\Config;
 
-use Pimcore\Tool;
+use Pimcore\Model\Element\ValidationException;
 use Pimcore\Model\DataObject;
 use Pimcore\Model\Asset\Image;
 use Pimcore\Model\Asset\Image\Thumbnail;
@@ -52,7 +52,7 @@ class ObjectConfig
             return $this->sitemap['auto_regenerate'];
         }
 
-        return true;
+        return false;
     }
 
     public static function getListClass()
@@ -66,7 +66,41 @@ class ObjectConfig
         return array_column($classConfig, 'class_name');
     }
 
-    public function setSlug()
+    public function setSlug(string $slug)
+    {
+        if (!$this->valid || !$this->updateWhileEmpty) {
+            return;
+        }
+
+        $setSlugFunc = 'set' . ucfirst($this->fieldForSlug);
+
+        if (!(method_exists($this->object, $setSlugFunc)))
+        {
+            throw new \Exception('Invalid method set slug. Checking config again!');
+        }
+
+        $slug = TextTool::str2slug($slug, $this->locale);
+        $urlslug = new UrlSlug($slug);
+
+        $this->object->$setSlugFunc([$urlslug], $this->locale);
+
+        try {
+            $this->object->save();
+
+            return [
+                'success' => true,
+                'validate_message' => null,
+            ];
+        } catch (ValidationException $e) {
+            return [
+                'success' => false,
+                'validate_message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    // use in SlugListener
+    public function setSlugs()
     {
         if (!$this->valid || !$this->updateWhileEmpty) {
             return;
@@ -84,10 +118,10 @@ class ObjectConfig
         }
 
         $id = $this->object->getId();
-        $default = Tool::getDefaultLanguage();
+        $default = LanguageTool::getDefault();
         $defaultValue = $this->object->$getValueFunc($default);
 
-        $languages = Tool::getValidLanguages();
+        $languages = LanguageTool::getList();
         foreach ($languages as $language) {
             $currentSlug = $this->object->$getSlugFunc($language);
 

@@ -43,7 +43,7 @@ Run command to generate sitemap xml files with above configs:
 
 ## Re-Generate
 
-After updating or deteting, automatically regenerate sitemap file. This flow can switch off with config in `starfruit_builder`, see [example config](../config/pimcore/starfruit_builder.yaml)
+After updating or deteting, automatically regenerate sitemap file with config in `starfruit_builder`, see [example config](../config/pimcore/starfruit_builder.yaml)
 
 ```bash
 starfruit_builder:
@@ -59,10 +59,10 @@ starfruit_builder:
                 image: image
                 content: contents
             sitemap:
-                auto_regenerate: false # default true
+                auto_regenerate: true # default false
     ...
 
     sitemap:
         document:
-            auto_regenerate: false # default true
+            auto_regenerate: true # default false
 ```
