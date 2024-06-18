@@ -87,15 +87,9 @@ class ObjectConfig
         try {
             $this->object->save();
 
-            return [
-                'success' => true,
-                'validate_message' => null,
-            ];
+            return true;
         } catch (ValidationException $e) {
-            return [
-                'success' => false,
-                'validate_message' => $e->getMessage(),
-            ];
+            return false;
         }
     }
 

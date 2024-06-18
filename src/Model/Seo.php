@@ -15,6 +15,7 @@ use Starfruit\BuilderBundle\Config\SeoConfig;
 use Starfruit\BuilderBundle\Tool\AssetTool;
 use Starfruit\BuilderBundle\Tool\SystemTool;
 use Starfruit\BuilderBundle\Tool\TextTool;
+use Starfruit\BuilderBundle\Service\SlugService;
 
 class Seo extends AbstractModel
 {
@@ -132,28 +133,31 @@ class Seo extends AbstractModel
         return null;
     }
 
-    public function setSlug(string $slug): array
+    public function setSlug(string $slug): bool
     {
-        $result = [];
+        $slug = trim($slug);
+        $slug = rtrim($slug, '/');
 
         if ($this->elementType == self::OBJECT_TYPE) {
             $config = new ObjectConfig($this->element, $this->language);
-            $result = $config->setSlug($slug);
+            return $config->setSlug($slug);
         }
 
         if ($this->elementType == self::DOCUMENT_TYPE) {
             $slug = TextTool::str2slug($slug, $this->language);
-
-            try {
-                $document = Document::getById($this->element);
+            $document = Document::getById($this->element);
+            $validate = SlugService::validatePrettyUrl($document, $slug);
+            if ($validate) {
                 $document->setPrettyUrl($slug);
                 $document->save();
-            } catch (Exception $e) {
-                
+
+                return true;
             }
+
+            return false;
         }
 
-        return $result;
+        return false;
     }
 
     public function getScoring($getFullFields = false)

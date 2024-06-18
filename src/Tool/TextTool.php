@@ -6,7 +6,7 @@ use Pimcore\Config;
 
 class TextTool
 {
-    public static function str2slug($string, $locale)
+    public static function str2slug($string, $locale = null)
     {
         // keep character /
         $values = explode('/', $string);
@@ -15,17 +15,23 @@ class TextTool
         }
         $slug = implode('/', $values);
 
-        // check prefix of slug must include locale, ex. /vi/custom-slug
-        $localeLength = strlen($locale);
-        if (substr($slug, 0, 1) == '/') {
-            if (substr($slug, 0, $localeLength + 2) !== '/' . $locale . '/') {
-                $slug = '/' . $locale . $slug;
+        if ($locale) {
+            // check prefix of slug must include locale, ex. /vi/custom-slug
+            $localeLength = strlen($locale);
+            if (substr($slug, 0, 1) == '/') {
+                if (substr($slug, 0, $localeLength + 2) !== '/' . $locale . '/') {
+                    $slug = '/' . $locale . $slug;
+                }
+            } else {
+                if (substr($slug, 0, $localeLength + 1) == $locale . '/') {
+                    $slug = '/' . $slug;
+                } else {
+                    $slug = '/' . $locale . '/' . $slug;
+                }
             }
         } else {
-            if (substr($slug, 0, $localeLength + 1) == $locale . '/') {
+           if (substr($slug, 0, 1) !== '/') {
                 $slug = '/' . $slug;
-            } else {
-                $slug = '/' . $locale . '/' . $slug;
             }
         }
 
