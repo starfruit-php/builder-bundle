@@ -20,10 +20,13 @@ services:
     Redis:
         # you can also use \RedisArray, \RedisCluster, \Relay\Relay or \Predis\Client classes
         class: \Predis\Client
-        calls:
-            - connect:
-                - '%env(BUILDER_REDIS_HOST)%'
-                - '%env(int:BUILDER_REDIS_PORT)%'
+        arguments:
+            - { scheme: 'tcp', host: '%env(BUILDER_REDIS_HOST)%', port: '%env(int:BUILDER_REDIS_PORT)%' }
+        # calls:
+
+        #     - connect:
+        #         - '%env(BUILDER_REDIS_HOST)%'
+        #         - '%env(int:BUILDER_REDIS_PORT)%'
 
             # uncomment the following if your Redis server requires a password
             # - auth:
