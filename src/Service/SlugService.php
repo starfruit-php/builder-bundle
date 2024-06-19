@@ -2,6 +2,7 @@
 
 namespace Starfruit\BuilderBundle\Service;
 
+use Pimcore\Db;
 use Pimcore\Model\Document;
 use Pimcore\Tool\Frontend;
 use Pimcore\Model\Element;
@@ -56,5 +57,40 @@ class SlugService
         }
 
         return true;
+    }
+
+    public static function queryByClassname($classname, $locale = null)
+    {
+        if (!$locale) {
+            $query = "SELECT SLUG.`slug` as slug
+                FROM `object_url_slugs` as SLUG
+                INNER JOIN `classes` as CLASSES
+                INNER JOIN `objects` as OBJECTS
+                WHERE SLUG.`ownertype` = 'localizedfield'
+                AND SLUG.`classId` = CLASSES.`id`
+                AND CLASSES.`name` = ?
+                AND SLUG.`objectId` = OBJECTS.`id`
+                AND OBJECTS.`published` = 1";
+
+            $params = [$classname];
+        } else {
+            $query = "SELECT SLUG.`slug` as slug
+                FROM `object_url_slugs` as SLUG
+                INNER JOIN `classes` as CLASSES
+                INNER JOIN `objects` as OBJECTS
+                WHERE SLUG.`ownertype` = 'localizedfield'
+                AND SLUG.`position` = ?
+                AND SLUG.`classId` = CLASSES.`id`
+                AND CLASSES.`name` = ?
+                AND SLUG.`objectId` = OBJECTS.`id`
+                AND OBJECTS.`published` = 1";
+
+            $params = [$locale, $classname];
+        }
+
+        $data = Db::get()->fetchAllAssociative($query, $params);
+        $data = array_column($data, 'slug');
+
+        return $data;
     }
 }

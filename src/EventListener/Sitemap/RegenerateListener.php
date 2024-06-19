@@ -8,9 +8,19 @@ use Starfruit\BuilderBundle\Service\SitemapService;
 
 class RegenerateListener
 {
+    private function isSaveVersion($event)
+    {
+        $args = $event->getArguments();
+        $saveVersionOnly = isset($args['saveVersionOnly']) && $args['saveVersionOnly'];
+
+        return $saveVersionOnly;
+    }
+
     public function postObjectUpdate(DataObjectEvent $event)
     {
-        SitemapService::generateObject($event->getObject());
+        if (!$this->isSaveVersion($event)) {
+            SitemapService::generateObject($event->getObject());
+        }
     }
 
     public function postObjectDelete(DataObjectEvent $event)
@@ -20,7 +30,9 @@ class RegenerateListener
 
     public function postDocumentUpdate(DocumentEvent $event)
     {
-        SitemapService::generateDocument($event->getDocument());
+        if (!$this->isSaveVersion($event)) {
+            SitemapService::generateDocument($event->getDocument());
+        }
     }
 
     public function postDocumentDelete(DocumentEvent $event)
