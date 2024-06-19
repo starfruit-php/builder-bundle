@@ -4,6 +4,7 @@ namespace Starfruit\BuilderBundle\Extension;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Starfruit\BuilderBundle\Tool\SystemTool;
 
 class ShareSocialExtension extends AbstractExtension
 {
@@ -27,7 +28,7 @@ class ShareSocialExtension extends AbstractExtension
     {
         $type = strtolower($type);
         if (in_array($type, self::ALLOW_TYPES)) {
-            $url = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+            $url = SystemTool::getCurrentUrl();
 
             $link = null;
             switch ($type) {
