@@ -1,4 +1,7 @@
 pimcore:
+    general:
+       timezone: Asia/Ho_Chi_Minh
+
     chromium:
         uri: 'ws://chrome:3000/'
 
