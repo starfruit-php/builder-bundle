@@ -40,6 +40,7 @@ class Seo extends AbstractModel
     public ?string $schemaBlock = null;
     public ?string $image = null;
     public ?int $imageAsset = null;
+    public ?int $redirectId = null;
 
     public static function getById(int $id): ?self
     {
@@ -162,7 +163,7 @@ class Seo extends AbstractModel
 
     public function getScoring($getFullFields = false)
     {
-        if ($this->elementType == self::OBJECT_TYPE) {
+        if ($this->isObjectType()) {
             return $this->getObjectScoring($getFullFields);
         }
 
@@ -187,17 +188,26 @@ class Seo extends AbstractModel
         ];
 
         $seoData = [];
-        if ($this->elementType == self::OBJECT_TYPE) {
-            $seoData = $this->getObjectSeoData();
-        }
-
-        if ($this->elementType == self::DOCUMENT_TYPE) {
-            $seoData = $this->getDocumentSeoData();
-        }
-
+        $seoData = $this->isObjectType() ? $this->getObjectSeoData() : $this->getDocumentSeoData();
         $seoData = array_merge($defaultData, $seoData);
 
         return $seoData;
+    }
+
+    public function getSlug($withDomain = true, $objectConfig = null)
+    {
+        if ($this->isObjectType()) {
+            if (!$objectConfig) {
+                $objectConfig = new ObjectConfig($this->element, $this->language);
+            }
+            $slug = $objectConfig->getSlug();
+            $slug = $withDomain ? SystemTool::getUrl($slug) : $slug;
+        } else {
+            $document = Document::getById($this->element);
+            $slug = $withDomain ? $document->getUrl() : $document->getFullPath();
+        }
+
+        return $slug;
     }
 
     private function renderImage()
@@ -271,13 +281,17 @@ class Seo extends AbstractModel
             return [];
         }
 
-        $slug = SystemTool::getUrl($objectConfig->getSlug());
-
+        $slug = $this->getSlug(true, $objectConfig);
         $title = $this->title ?: $seoData['title'];
         $description = $this->description ?: $seoData['description'];
         $image = $this->renderImage() ?: $seoData['image'];
 
         return compact('title', 'description', 'image', 'slug');
+    }
+
+    private function isObjectType()
+    {
+        return $this->elementType == self::OBJECT_TYPE;
     }
 
     public function setElementType(?string $elementType): void
@@ -428,6 +442,16 @@ class Seo extends AbstractModel
     public function getImageAsset(): ?int
     {
         return $this->imageAsset;
+    }
+
+    protected function setRedirectId(?int $redirectId): void
+    {
+        $this->redirectId = $redirectId;
+    }
+
+    public function getRedirectId(): ?int
+    {
+        return $this->redirectId;
     }
 
     public function setId(?int $id): void

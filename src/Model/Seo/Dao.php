@@ -5,6 +5,7 @@ namespace Starfruit\BuilderBundle\Model\Seo;
 use Pimcore\Model\Dao\AbstractDao;
 use Pimcore\Model\Exception\NotFoundException;
 use Starfruit\BuilderBundle\Service\DatabaseService;
+use Starfruit\BuilderBundle\Service\RedirectService;
 
 class Dao extends AbstractDao
 {
@@ -68,6 +69,10 @@ class Dao extends AbstractDao
                 $buffer[$k] = $value;
             }
         }
+
+        // update redirectId
+        $redirectId = RedirectService::getId($this->model);
+        $buffer['redirectId'] = $redirectId;
 
         if ($this->model->getId() !== null) {
             $this->db->update($this->tableName, $buffer, ["id" => $this->model->getId()]);
