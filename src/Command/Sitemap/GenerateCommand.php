@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 
 use Starfruit\BuilderBundle\Tool\SystemTool;
-use Starfruit\BuilderBundle\Sitemaps\Command;
+use Starfruit\BuilderBundle\Sitemap\Generator;
 
 class GenerateCommand extends AbstractCommand
 {
@@ -30,13 +30,10 @@ class GenerateCommand extends AbstractCommand
             return AbstractCommand::INVALID;
         }
         
-        try {
-            Command::dumpSitemap($domain);
+        Generator::populate();
+        Generator::populateIndex();
 
-            $this->writeInfo("Check folder public to get sitemap data");
-        } catch (\Throwable $e) {
-            $this->writeError("Something wrong!");
-        }
+        $this->writeInfo("Check folder public to get sitemap data");
 
         return AbstractCommand::SUCCESS;
     }

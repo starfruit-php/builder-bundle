@@ -4,9 +4,7 @@
 
 1. Sitemap setting get Class list from `link_generate_objects`, see [example config](../config/pimcore/starfruit_builder.yaml)
 
-2. Do not overwrite `pimcore_seo` config, check [here](../config/pimcore/pimcore_seo.yaml)
-
-3. Run command to set require options:
+2. Run command to set require options:
 
 ```bash
 # main-domain: website domain, ex. https://example.com
@@ -18,32 +16,56 @@
 Get/set Class list for Sitemap setting:
 
 ```bash
-use Starfruit\BuilderBundle\Sitemaps\Setting;
+use Starfruit\BuilderBundle\Sitemap\Setting;
 ...
-// get - data array construction:option-setting
+// data construction:
 // [
 //     'key'   => using to pass in set function
 //     'name'  => display name
 //     'check' => status - boolean
 // ]
-$sitemap = Setting::getSitemap();
 
+// keys (class) for sitemap config
+// get
+$sitemap = Setting::getKeys();
 // set
 $keys = ['news', 'product'];
-Setting::setSitemap($keys);
+Setting::setKeys($keys);
+
+// order options for sitemap config
+// get
+$orders = Setting::getOrder();
+// set
+$order = 'asc';
+Setting::setOrder($order);
 ```
 
 ## Generate
 
-Run command to generate sitemap xml files with above configs:
+1. Run command to generate sitemap xml files with above configs:
 
 ```bash
 ./bin/console builder:sitemap:generate
 ```
 
+2. Useful functions:
+
+```bash
+use Starfruit\BuilderBundle\Sitemap\Generator;
+...
+// generate sitemap files with all sections (keys);
+Generator::populate();
+
+// generate sitemap file with a section (keys);
+Generator::populate($section);
+
+// generate main sitemap file (default);
+Generator::populateIndex();
+```
+
 ## Re-Generate
 
-After updating or deteting, automatically regenerate sitemap file with config in `starfruit_builder`, see [example config](../config/pimcore/starfruit_builder.yaml)
+After updating or deteting object or document/page, automatically regenerate sitemap file with config in `starfruit_builder`, see [example config](../config/pimcore/starfruit_builder.yaml)
 
 ```bash
 starfruit_builder:

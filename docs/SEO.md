@@ -37,6 +37,9 @@ Using class `Starfruit\BuilderBundle\Model\Seo` to get scoring result
     $keyword = 'car';
     $seo->setKeyword($keyword);
     $seo->save();
+
+    // set slug
+    $seo->setSlug('/vi/new-slug');
     
     // get full SEO Scoring
     $scoring = $seo->getScoring();

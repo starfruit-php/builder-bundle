@@ -46,6 +46,9 @@ services:
     Starfruit\BuilderBundle\Seo\:
         resource: '../src/Seo/*'
 
+    Starfruit\BuilderBundle\Sitemap\:
+        resource: '../src/Sitemap/*'
+
     # ---------------------------------------------------------
     # Event Listener
     # ---------------------------------------------------------
@@ -85,14 +88,3 @@ services:
         tags:
             - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.css, method: addCSSFiles }
             - { name: kernel.event_listener, event: pimcore.bundle_manager.paths.js, method: addJSFiles }
-
-    # ---------------------------------------------------------
-    # Sitemaps
-    # ---------------------------------------------------------
-    Starfruit\BuilderBundle\Sitemaps\Processors\AbsoluteURLProcessor: ~
-    Starfruit\BuilderBundle\Sitemaps\Setting: ~
-
-    Starfruit\BuilderBundle\Sitemaps\Generator:
-        arguments:
-            $processors:
-                - '@Starfruit\BuilderBundle\Sitemaps\Processors\AbsoluteURLProcessor'

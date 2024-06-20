@@ -2,6 +2,18 @@
 #     resource: "@StarfruitBuilderBundle/src/Controller/API/"
 #     type: annotation
 
+starfruit_builder_sitemap_index:
+    path:     "/sitemap.{_format}"
+    defaults: { _controller: Starfruit\BuilderBundle\Controller\SitemapController::indexAction }
+    requirements:
+        _format: xml
+
+starfruit_builder_sitemap_section:
+    path:     "/sitemap.{name}.{_format}"
+    defaults: { _controller: Starfruit\BuilderBundle\Controller\SitemapController::sectionAction }
+    requirements:
+        _format: xml
+
 starfruit_builder_default:
     resource: "@StarfruitBuilderBundle/src/Controller/*"
     type: annotation

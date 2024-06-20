@@ -1,7 +1,6 @@
 imports:
     - { resource: builder.yaml }
     - { resource: starfruit_builder.yaml }
-    - { resource: pimcore_seo.yaml }
 
     # - { resource: './flysystem/aws_s3.yaml', ignore_errors: true }
     # - { resource: './flysystem/azure_blob.yaml', ignore_errors: true }
