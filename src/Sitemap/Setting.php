@@ -28,12 +28,12 @@ class Setting
         return $option;
     }
 
-    public static function getSitemapKeys(): array
+    public static function getSitemapKeys(): ?array
     {
         $option = self::getOptionKeys();
         $keys = empty($option) ? [] : json_decode($option->getContent(), true);
 
-        return $keys;
+        return empty($keys) ? [] : $keys;
     }
 
     public static function getSitemapOrder(): string
@@ -83,7 +83,7 @@ class Setting
         $option->save();
     }
 
-    public static function getKeys(): array
+    public static function getKeys(): ?array
     {
         $keys = self::getSitemapKeys();
         $classNames = ObjectConfig::getListClassName();
