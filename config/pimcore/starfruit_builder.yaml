@@ -35,3 +35,8 @@ starfruit_builder:
             remove_headers:
             custom_hsts_value: 'max-age=7776000'
             custom_csp_value:
+
+    # template:
+    #     editmode:
+    #         hide_default_css: false
+    #         custom_css_files:
