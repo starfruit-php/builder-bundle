@@ -25,14 +25,12 @@ Using class `Starfruit\BuilderBundle\Model\Seo` to get scoring result
     ...
     // get by element and locale
     $element = DataObject::getById(1503);
-    
     // use current locale
     $seo = Seo::getOrCreate($element);
-    
     // OR pass custom locale
     $locale = 'vi';
     $seo = Seo::getOrCreate($element, $locale);
-    
+
     // store keyword
     $keyword = 'car';
     $seo->setKeyword($keyword);
@@ -40,7 +38,26 @@ Using class `Starfruit\BuilderBundle\Model\Seo` to get scoring result
 
     // set slug
     $seo->setSlug('/vi/new-slug');
-    
+
+    // meta data
+    // set
+    $metaData = [
+        'og:image:alt' => 'example alt',
+        'og:image' => '/image.png'
+    ];
+
+    $twitterMetaData = [
+        'twitter:title' => 'twitter title'
+    ];
+
+    $customMetaData = [];
+
+    $seo->setMetaDatas($metaData, $twitterMetaData, $customMetaData);
+    $seo->save();
+
+    // get
+    $seo->getMetaDatas();
+
     // get full SEO Scoring
     $scoring = $seo->getScoring();
 ```

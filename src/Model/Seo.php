@@ -41,6 +41,7 @@ class Seo extends AbstractModel
     public ?string $image = null;
     public ?int $imageAsset = null;
     public ?int $redirectId = null;
+    public ?string $metaData = null;
 
     public static function getById(int $id): ?self
     {
@@ -161,6 +162,29 @@ class Seo extends AbstractModel
         return false;
     }
 
+    public function setMetaDatas(array $ogMeta, array $twitterMeta, array $customMeta): void
+    {
+        $metaDatas = compact('ogMeta', 'twitterMeta', 'customMeta');
+        $metaData = json_encode($metaDatas);
+        $this->setMetaData($metaData);
+    }
+
+    public function getMetaDatas(): ?array
+    {
+        $metaDatas = [
+            'ogMeta' => [],
+            'twitterMeta' => [],
+            'customMeta' => [],
+        ];
+        $metaData = $this->getMetaData();
+        if (!empty($metaData)) {
+            $metaData = json_decode($metaData, true);
+            $metaDatas = array_merge($metaDatas, $metaData);
+        }
+
+        return $metaDatas;
+    }
+
     public function getScoring($getFullFields = false)
     {
         if ($this->isObjectType()) {
@@ -177,6 +201,12 @@ class Seo extends AbstractModel
 
     public function getSeoData(): ?array
     {
+        $metaDatas = $this->getMetaDatas();
+        $metaData = [];
+        foreach ($metaDatas as $value) {
+            $metaData = array_merge($metaData, $value);
+        }
+
         $defaultData = [
             'index' => $this->indexing,
             'nofollow' => $this->nofollow,
@@ -184,7 +214,8 @@ class Seo extends AbstractModel
             'title' => '',
             'description' => '',
             'image' => '',
-            'slug' => ''
+            'slug' => '',
+            'metaData' => $metaData,
         ];
 
         $seoData = [];
@@ -457,6 +488,16 @@ class Seo extends AbstractModel
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    protected function setMetaData(?string $metaData): void
+    {
+        $this->metaData = $metaData;
+    }
+
+    public function getMetaData(): ?string
+    {
+        return $this->metaData;
     }
 
     public function getId(): ?int

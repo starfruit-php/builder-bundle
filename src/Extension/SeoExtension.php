@@ -14,6 +14,7 @@ use Pimcore\Model\DataObject\Data\UrlSlug;
 
 use Starfruit\BuilderBundle\Tool\LanguageTool;
 use Starfruit\BuilderBundle\Model\Seo;
+use Starfruit\BuilderBundle\Config\SeoConfig;
 
 class SeoExtension extends AbstractExtension
 {
@@ -73,16 +74,15 @@ class SeoExtension extends AbstractExtension
 
     private function renderSeo($data, $schemaData = [])
     {
-        $defaultMetas = [
-            "og:locale" => $this->locale,
-            "og:type" => "website",
-        ];
+        $defaultMetas = $metas = [];
 
-        foreach ($defaultMetas as $key => $value) {
-            $this->headMeta->appendProperty($key, $value);
-        }
+        $seoConfig = new SeoConfig;
+        if ($seoConfig->getAutoFillMeta()) {
+            $defaultMetas = [
+                "og:locale" => $this->locale,
+                "og:type" => "website",
+            ];
 
-        if (!empty($data)) {
             $metas = [
                 "og:title" => "title",
                 "og:description" => "description",
@@ -91,35 +91,40 @@ class SeoExtension extends AbstractExtension
                 "og:url" => "slug",
                 "twitter:title" => "title",
                 "twitter:description" => "description",
+                "twitter:image" => "image",
+                "twitter:image:alt" => "title",
             ];
-
-            foreach ($metas as $key => $field) {
-                if (isset($data[$field]) && !empty($data[$field])) {
-                    $this->headMeta->appendProperty($key, $data[$field]);
-                }
-            }
-
-            $field = 'title';
-            if (isset($data[$field]) && !empty($data[$field])) {
-                $this->headTitle->set($data[$field]);
-            }
-
-            $field = 'description';
-            if (isset($data[$field]) && !empty($data[$field])) {
-                $this->headMeta->setDescription($data[$field]);
-            }
-
-            $indexFollow = [
-                $data['index'] ? 'index' : 'noindex',
-                $data['nofollow'] ? 'nofollow' : 'follow',
-            ];
-            $indexFollowContent = implode(',', $indexFollow);
-            $this->headMeta->addRaw('<meta name="robots" content="' . $indexFollowContent . '">');
-            $this->headMeta->addRaw('<meta name="googlebot" content="' . $indexFollowContent . '">');
-
-            $canonicalUrl = $data['canonicalUrl'] ?: $data['slug'];
-            $this->headMeta->addRaw('<link rel="canonical" href="' . $canonicalUrl . '" />');
         }
+
+        $metas = array_map(fn($e) => isset($data[$e]) && !empty($data[$e]) ? $data[$e] : null, $metas);
+        $metas = array_merge($defaultMetas, $metas, isset($data['metaData']) && !empty($data['metaData']) ? $data['metaData'] : []);
+
+        foreach ($metas as $key => $value) {
+            if ($value) {
+                $this->headMeta->appendProperty($key, $value);
+            }
+        }
+
+        $field = 'title';
+        if (isset($data[$field]) && !empty($data[$field])) {
+            $this->headTitle->set($data[$field]);
+        }
+
+        $field = 'description';
+        if (isset($data[$field]) && !empty($data[$field])) {
+            $this->headMeta->setDescription($data[$field]);
+        }
+
+        $indexFollow = [
+            $data['index'] ? 'index' : 'noindex',
+            $data['nofollow'] ? 'nofollow' : 'follow',
+        ];
+        $indexFollowContent = implode(',', $indexFollow);
+        $this->headMeta->addRaw('<meta name="robots" content="' . $indexFollowContent . '">');
+        $this->headMeta->addRaw('<meta name="googlebot" content="' . $indexFollowContent . '">');
+
+        $canonicalUrl = $data['canonicalUrl'] ?: $data['slug'];
+        $this->headMeta->addRaw('<link rel="canonical" href="' . $canonicalUrl . '" />');
 
         foreach ($schemaData as $schemaTag) {
             if (!empty($schemaTag)) {

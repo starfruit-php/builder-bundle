@@ -42,6 +42,7 @@ class DatabaseService
             `image` varchar(255) DEFAULT NULL,
             `imageAsset` int(11) DEFAULT NULL,
             `redirectId` int(11) DEFAULT NULL,
+            `metaData` longtext DEFAULT NULL,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
@@ -75,7 +76,8 @@ class DatabaseService
             ADD COLUMN IF NOT EXISTS `schemaBlock` longtext DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `image` varchar(255) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `imageAsset` int(11) DEFAULT NULL,
-            ADD COLUMN IF NOT EXISTS `redirectId` int(11) DEFAULT NULL
+            ADD COLUMN IF NOT EXISTS `redirectId` int(11) DEFAULT NULL,
+            ADD COLUMN IF NOT EXISTS `metaData` longtext DEFAULT NULL
         ";
 
         Db::get()->executeQuery($query);

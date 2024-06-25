@@ -14,6 +14,7 @@ starfruit_builder:
     #             auto_regenerate: true
     # seo:
     #     image_thumbnail: 'seo_thumbnail'
+    #     autofill_meta_tags: true
 
     # mail:
     #     ignore_debug_mode: true
