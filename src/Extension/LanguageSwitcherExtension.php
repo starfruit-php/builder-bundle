@@ -60,6 +60,13 @@ class LanguageSwitcherExtension extends AbstractExtension
         $links = [];
 
         foreach ($languages as $language) {
+            $languageRoot = '/' . $language;
+            //skip if root document for local is missing
+            $languageDocument = Document::getByPath($languageRoot);
+            if (!($languageDocument instanceof Document && $languageDocument->getPublished())) {
+                continue;
+            }
+
             $target = null;
 
             // exist value for slug -> get it
@@ -72,13 +79,7 @@ class LanguageSwitcherExtension extends AbstractExtension
             }
 
             if (!$target) {
-                $target = '/' . $language;
-
-                //skip if root document for local is missing
-                if (!(Document::getByPath($target) instanceof Document)) {
-                    continue;
-                }
-
+                $target = $langaugeParent;
                 if (isset($translations[$language])) {
                     $localizedDocument = Document::getById($translations[$language]);
                     if ($localizedDocument) {
