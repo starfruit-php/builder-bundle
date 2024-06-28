@@ -79,7 +79,7 @@ class LanguageSwitcherExtension extends AbstractExtension
             }
 
             if (!$target) {
-                $target = $langaugeParent;
+                $target = $languageRoot;
                 if (isset($translations[$language])) {
                     $localizedDocument = Document::getById($translations[$language]);
                     if ($localizedDocument) {
