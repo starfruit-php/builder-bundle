@@ -43,6 +43,7 @@ class DatabaseService
             `imageAsset` int(11) DEFAULT NULL,
             `redirectId` int(11) DEFAULT NULL,
             `metaData` longtext DEFAULT NULL,
+            `generateSitemap` tinyint(1) DEFAULT 1,
             PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
@@ -66,7 +67,7 @@ class DatabaseService
 
     public static function updateBuilderSeo()
     {
-        $query = "ALTER TABLE `builder_seo`
+        $query = "ALTER TABLE " . self::BUILDER_SEO_TABLE . "
             ADD COLUMN IF NOT EXISTS `indexing` tinyint(1) DEFAULT 1,
             ADD COLUMN IF NOT EXISTS `nofollow` tinyint(1) DEFAULT 0,
             ADD COLUMN IF NOT EXISTS `canonicalUrl` varchar(255) DEFAULT NULL,
@@ -77,7 +78,8 @@ class DatabaseService
             ADD COLUMN IF NOT EXISTS `image` varchar(255) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `imageAsset` int(11) DEFAULT NULL,
             ADD COLUMN IF NOT EXISTS `redirectId` int(11) DEFAULT NULL,
-            ADD COLUMN IF NOT EXISTS `metaData` longtext DEFAULT NULL
+            ADD COLUMN IF NOT EXISTS `metaData` longtext DEFAULT NULL,
+            ADD COLUMN IF NOT EXISTS `generateSitemap` tinyint(1) DEFAULT 1
         ";
 
         Db::get()->executeQuery($query);

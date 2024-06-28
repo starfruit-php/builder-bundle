@@ -40,6 +40,33 @@ class Dao extends AbstractDao
         $this->assignVariablesToModel($data);
     }
 
+    public function getByObject(?int $element, $language): void
+    {
+        $this->model->setElement($element);
+        $this->model->setLanguage($language);
+
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ? AND language = ?', [$this->model->getElement(), $this->model->getLanguage()]);
+
+        if (!$data) {
+            throw new NotFoundException("Builder SEO with the object " . $this->model->getElement() . " doesn't exists");
+        }
+
+        $this->assignVariablesToModel($data);
+    }
+
+    public function getByDocument(?int $element): void
+    {
+        $this->model->setElement($element);
+
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ?', [$this->model->getElement()]);
+
+        if (!$data) {
+            throw new NotFoundException("Builder SEO with the document " . $this->model->getElement() . " doesn't exists");
+        }
+
+        $this->assignVariablesToModel($data);
+    }
+
     public function save(): void
     {
         $vars = get_object_vars($this->model);

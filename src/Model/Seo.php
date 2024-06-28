@@ -31,7 +31,7 @@ class Seo extends AbstractModel
     public ?string $description = null;
     public ?string $keyword = null;
     public ?string $language = null;
-    public ?bool $indexing = false;
+    public ?bool $indexing = true;
     public ?bool $nofollow = false;
     public ?string $canonicalUrl = null;
     public ?bool $redirectLink = false;
@@ -42,6 +42,7 @@ class Seo extends AbstractModel
     public ?int $imageAsset = null;
     public ?int $redirectId = null;
     public ?string $metaData = null;
+    public ?bool $generateSitemap = true;
 
     public static function getById(int $id): ?self
     {
@@ -60,33 +61,38 @@ class Seo extends AbstractModel
     public static function getOrCreate($element, $language = null): ?self
     {
         try {
-            if (!$language) {
-                $language = LanguageTool::getLocale();
-            }
+            $obj = null;
 
             if ($element instanceof DataObject) {
                 $config = new ObjectConfig($element, $language);
                 if (!$config->valid()) {
                     return null;
                 }
+
+                if (!$language) {
+                    $language = LanguageTool::getLocale();
+                }
+
+                $obj = self::getByObject($element, $language);
             }
 
             if ($element instanceof Document && !($element instanceof Document\Page)) {
                 return null;
+            } else {
+                $language = $element->getProperty('language');
+                $obj = self::getByDocument($element);
             }
-
-            $obj = self::getByElement($element, $language);
 
             if (!$obj) {
                 $obj = new self;
                 $obj->setElement($element->getId());
                 $obj->setElementType($element->getType() == self::OBJECT_TYPE ? self::OBJECT_TYPE : self::DOCUMENT_TYPE);
-                $obj->setLanguage($language);
                 $obj->setIndexing(true);
                 $obj->setNofollow(false);
-
-                $obj->save();
             }
+
+            $obj->setLanguage($language);
+            $obj->save();
 
             return $obj;
         }
@@ -107,6 +113,38 @@ class Seo extends AbstractModel
 
             $obj = new self;
             $obj->getDao()->getByElement($id, $language);
+            return $obj;
+        }
+        catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Builder SEO with id $id not found");
+        }
+
+        return null;
+    }
+
+    private static function getByObject($element, $language): ?self
+    {
+        try {
+            $id = $element->getId();
+
+            $obj = new self;
+            $obj->getDao()->getByObject($id, $language);
+            return $obj;
+        }
+        catch (NotFoundException $ex) {
+            \Pimcore\Logger::warn("Builder SEO with id $id not found");
+        }
+
+        return null;
+    }
+
+    private static function getByDocument($element): ?self
+    {
+        try {
+            $id = $element->getId();
+
+            $obj = new self;
+            $obj->getDao()->getByDocument($id);
             return $obj;
         }
         catch (NotFoundException $ex) {
@@ -498,6 +536,16 @@ class Seo extends AbstractModel
     public function getMetaData(): ?string
     {
         return $this->metaData;
+    }
+
+    public function setGenerateSitemap(?bool $generateSitemap): void
+    {
+        $this->generateSitemap = $generateSitemap;
+    }
+
+    public function getGenerateSitemap(): ?bool
+    {
+        return $this->generateSitemap;
     }
 
     public function getId(): ?int

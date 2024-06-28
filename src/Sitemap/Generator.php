@@ -5,6 +5,7 @@ namespace Starfruit\BuilderBundle\Sitemap;
 use Pimcore\Db;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Tool\TimeTool;
+use Starfruit\BuilderBundle\Service\DatabaseService;
 
 class Generator extends File
 {
@@ -96,9 +97,13 @@ class Generator extends File
                     DOCUMENTS.`id` as id
                 FROM `documents` as DOCUMENTS
                 INNER JOIN `documents_page` as PAGES
+                INNER JOIN " . DatabaseService::BUILDER_SEO_TABLE . " as SEO
                 WHERE DOCUMENTS.`type` = 'page'
                 AND DOCUMENTS.`published` = 1
                 AND DOCUMENTS.`id` = PAGES.`id`
+                AND DOCUMENTS.`id` = SEO.`element`
+                AND SEO.`elementType` = 'document'
+                AND SEO.`generateSitemap` = 1
                 ORDER BY DOCUMENTS.`modificationDate` " . $sitemapOrder;
             $params = [self::LASTMOD_SQL_FORMAT];
         } else {
@@ -113,9 +118,13 @@ class Generator extends File
                     DOCUMENTS.`id` as id
                 FROM `documents` as DOCUMENTS
                 INNER JOIN `documents_page` as PAGES
+                INNER JOIN " . DatabaseService::BUILDER_SEO_TABLE . " as SEO
                 WHERE DOCUMENTS.`type` = 'page'
                 AND DOCUMENTS.`published` = 1
                 AND DOCUMENTS.`id` = PAGES.`id`
+                AND DOCUMENTS.`id` = SEO.`element`
+                AND SEO.`elementType` = 'document'
+                AND SEO.`generateSitemap` = 1
                 AND DOCUMENTS.`id` = ?
                 ORDER BY DOCUMENTS.`modificationDate` " . $sitemapOrder;
             $params = [self::LASTMOD_SQL_FORMAT, $id];

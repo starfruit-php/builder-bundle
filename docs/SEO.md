@@ -60,6 +60,10 @@ Using class `Starfruit\BuilderBundle\Model\Seo` to get scoring result
 
     // get full SEO Scoring
     $scoring = $seo->getScoring();
+
+    // set yes or no to generate sitemap with a document
+    $seo->setGenerateSitemap(true);
+    $seo->save();
 ```
 
 ### SEO Scoring
