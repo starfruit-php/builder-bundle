@@ -216,7 +216,7 @@ class Seo extends AbstractModel
         ];
         $metaData = $this->getMetaData();
         if (!empty($metaData)) {
-            $metaData = json_decode($metaData, true);
+            $metaData = (array) json_decode($metaData, true);
             $metaDatas = array_merge($metaDatas, $metaData);
         }
 
@@ -242,7 +242,9 @@ class Seo extends AbstractModel
         $metaDatas = $this->getMetaDatas();
         $metaData = [];
         foreach ($metaDatas as $value) {
-            $metaData = array_merge($metaData, $value);
+            if (is_array($value)) {
+                $metaData = array_merge($metaData, $value);
+            }
         }
 
         $defaultData = [
