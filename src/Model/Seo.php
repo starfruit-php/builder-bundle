@@ -330,8 +330,8 @@ class Seo extends AbstractModel
     private function getDocumentSeoData(): ?array
     {
         $document = Document::getById($this->element);
-        $title = $this->title ?: $document->getTitle();
-        $description = $this->description ?: $document->getDescription();
+        $title = TextTool::removeHtmlTag($this->title ?: $document->getTitle());
+        $description = TextTool::removeHtmlTag($this->description ?: $document->getDescription());
         $slug = $document->getUrl();
         $image = $this->renderImage();
 
@@ -353,8 +353,8 @@ class Seo extends AbstractModel
         }
 
         $slug = $this->getSlug(true, $objectConfig);
-        $title = $this->title ?: $seoData['title'];
-        $description = $this->description ?: $seoData['description'];
+        $title = TextTool::removeHtmlTag($this->title ?: $seoData['title']);
+        $description = TextTool::removeHtmlTag($this->description ?: $seoData['description']);
         $image = $this->renderImage() ?: $seoData['image'];
 
         return compact('title', 'description', 'image', 'slug');
