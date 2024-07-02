@@ -281,16 +281,27 @@ class Seo extends AbstractModel
         return $slug;
     }
 
-    private function renderImage()
+    private function renderImage($element = null)
     {
+        $seoConfig = new SeoConfig;
+        $thumbnail = $seoConfig->getImageThumbnail();
+
         $image = $this->image;
         if ($this->imageAsset) {
             $asset = Image::getById($this->imageAsset);
 
             if ($asset) {
-                $seoConfig = new SeoConfig;
-                $thumbnail = $seoConfig->getImageThumbnail();
                 $image = AssetTool::getFrontendFullPath($asset, $thumbnail);
+            }
+        }
+
+        if (empty($image) && !$this->isObjectType() && $element instanceof Document\Page) {
+            $properties = $element->getProperties();
+            if (isset($properties['seoImage'])) {
+                $asset = $properties['seoImage']->getData();
+                if ($asset instanceof Image) {
+                    $image = AssetTool::getFrontendFullPath($asset, $thumbnail);
+                }
             }
         }
 
@@ -333,7 +344,7 @@ class Seo extends AbstractModel
         $title = TextTool::removeHtmlTag($this->title ?: $document->getTitle());
         $description = TextTool::removeHtmlTag($this->description ?: $document->getDescription());
         $slug = $document->getUrl();
-        $image = $this->renderImage();
+        $image = $this->renderImage($document);
 
         return compact('title', 'description', 'image', 'slug');
     }

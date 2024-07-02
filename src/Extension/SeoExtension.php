@@ -97,6 +97,7 @@ class SeoExtension extends AbstractExtension
         }
 
         $metas = !empty($metas) ? (array_map(fn($e) => isset($data[$e]) && !empty($data[$e]) ? $data[$e] : null, $metas)) : [];
+
         $metas = array_merge($defaultMetas, $metas, isset($data['metaData']) && !empty($data['metaData']) ? $data['metaData'] : []);
 
         foreach ($metas as $key => $value) {
