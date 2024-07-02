@@ -74,14 +74,14 @@ class Seo extends AbstractModel
                 }
 
                 $obj = self::getByObject($element, $language);
-            }
-
-            if ($element instanceof Document && !($element instanceof Document\Page)) {
-                return null;
             } else {
-                $language = $element->getProperty('language');
-                $obj = self::getByDocument($element);
-            }
+                if ($element instanceof Document\Page) {
+                    $language = $element->getProperty('language');
+                    $obj = self::getByDocument($element);
+                } else {
+                    return null;
+                }
+            } 
 
             if (!$obj) {
                 $obj = new self;

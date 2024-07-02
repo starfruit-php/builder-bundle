@@ -45,7 +45,7 @@ class Dao extends AbstractDao
         $this->model->setElement($element);
         $this->model->setLanguage($language);
 
-        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ? AND language = ?', [$this->model->getElement(), $this->model->getLanguage()]);
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ? AND language = ? AND elementType = ?', [$this->model->getElement(), $this->model->getLanguage(), \Starfruit\BuilderBundle\Model\Seo::OBJECT_TYPE]);
 
         if (!$data) {
             throw new NotFoundException("Builder SEO with the object " . $this->model->getElement() . " doesn't exists");
@@ -58,7 +58,7 @@ class Dao extends AbstractDao
     {
         $this->model->setElement($element);
 
-        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ?', [$this->model->getElement()]);
+        $data = $this->db->fetchAssociative('SELECT * FROM '.$this->tableName.' WHERE element = ? AND elementType = ?', [$this->model->getElement(), \Starfruit\BuilderBundle\Model\Seo::DOCUMENT_TYPE]);
 
         if (!$data) {
             throw new NotFoundException("Builder SEO with the document " . $this->model->getElement() . " doesn't exists");
