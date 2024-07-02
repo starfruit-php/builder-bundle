@@ -14,8 +14,7 @@ class SystemTool
 
     public static function getCurrentUrl()
     {
-        $request = self::getRequest();
-        return $request->getSchemeAndHttpHost() . $request->getPathInfo();
+        return self::getDomain() . self::getRequest()->getPathInfo();
     }
 
     public static function getDomain()
