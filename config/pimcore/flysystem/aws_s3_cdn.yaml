@@ -1,0 +1,87 @@
+# install package league/flysystem-aws-s3-v3
+
+pimcore:
+    assets:
+        frontend_prefixes:
+            # Prefix used for the original asset files
+            source: https://%env(string:ASSET_AWS_S3_ENDPOINT)%/assets
+            # Prefix used for all generated image & video thumbnails
+            thumbnail: https://%env(string:ASSET_AWS_S3_ENDPOINT)%/thumbnail
+
+services:
+    assets_s3:
+        class: 'Aws\S3\S3Client'
+        arguments:
+            -   region: '%env(string:ASSET_AWS_S3_REGION)%'
+                version: 'latest'
+                credentials:
+                    key: '%env(string:ASSET_AWS_S3_KEY)%'
+                    secret: '%env(string:ASSET_AWS_S3_SECRET)%'
+
+flysystem:
+    storages:
+        pimcore.asset.storage:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: assets
+
+        pimcore.thumbnail.storage:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: thumbnail
+
+        pimcore.asset_cache.storage:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: asset_cache
+
+        pimcore.asset.storage.source:
+            adapter: 'local'
+            visibility: public
+            options:
+                directory: '%kernel.project_dir%/public/var/assets'
+
+        pimcore.asset.storage.target:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: assets
+
+        pimcore.thumbnail.storage.source:
+            adapter: 'local'
+            visibility: public
+            options:
+                directory: '%kernel.project_dir%/public/var/tmp/thumbnails'
+
+        pimcore.thumbnail.storage.target:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: thumbnail
+
+        pimcore.asset_cache.storage.source:
+            adapter: 'local'
+            visibility: public
+            options:
+                directory: '%kernel.project_dir%/public/var/tmp/asset_cache'
+
+        pimcore.asset_cache.storage.target:
+            adapter: 'aws'
+            visibility: '%env(string:ASSET_AWS_S3_VISIBILITY, private)%'
+            options:
+                client: 'assets_s3'
+                bucket: '%env(string:ASSET_AWS_S3_BUCKET)%'
+                prefix: asset_cache
