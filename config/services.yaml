@@ -1,3 +1,6 @@
+parameters:
+    env(ASSET_AWS_S3_VISIBILITY): 'private'
+
 services:
     # default configuration for services in *this* file
     _defaults:
