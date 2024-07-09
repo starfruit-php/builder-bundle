@@ -37,7 +37,7 @@ class ShareSocialExtension extends AbstractExtension
                     break;
 
                 case 'twitter':
-                    $link = "https://twitter.com/share?ref_src=" . $url;
+                    $link = "https://twitter.com/share?url=" . $url;
                     break;
 
                 case 'linkedin':
