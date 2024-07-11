@@ -58,6 +58,8 @@ class RenderAddCodeListener
 
         $content = $response->getContent();
 
+        $codeHead = html_entity_decode($codeHead);
+
         if (!empty($codeHead)) {
             $codeHead = '
                 <!-- Builder CodeHead -->
@@ -71,6 +73,8 @@ class RenderAddCodeListener
                 $content = substr_replace($content, $codeHead . '</head>', $headEndPosition, 7);
             }
         }
+
+        $codeBody = html_entity_decode($codeBody);
 
         if (!empty($codeBody)) {
             $codeBody = '
