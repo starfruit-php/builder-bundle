@@ -32,10 +32,14 @@ abstract class BaseType
         return $replaceContent;
     }
 
-    public function getItem(array $slug): string
+    public function getItem(array $slug, string $id = null): string
     {
         $tag = $this->getTag();
-        $item = '<' . $tag . '><loc>' . SystemTool::getUrl($slug['loc']) . '</loc><lastmod>' . $slug['lastmod'] . '</lastmod><id>' . $slug['id'] . '</id></' . $tag . '>';
+        if ($id) {
+            $item = '<' . $tag . '><loc>' . SystemTool::getUrl($slug['loc']) . '</loc><lastmod>' . $slug['lastmod'] . '</lastmod><id>' . $slug['id'] . '</id></' . $tag . '>';
+        } else {
+            $item = '<' . $tag . '><loc>' . SystemTool::getUrl($slug['loc']) . '</loc><lastmod>' . $slug['lastmod'] . '</lastmod></' . $tag . '>';
+        }
 
         return $item;
     }

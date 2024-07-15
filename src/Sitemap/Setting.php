@@ -2,8 +2,11 @@
 
 namespace Starfruit\BuilderBundle\Sitemap;
 
+use Pimcore\Model\Document\Page;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Model\Option;
+use Starfruit\BuilderBundle\Service\DatabaseService;
+use Starfruit\BuilderBundle\Model\Seo;
 
 class Setting
 {
@@ -105,5 +108,46 @@ class Setting
         }
 
         return $data;
+    }
+
+    public static function getPages(): ?array
+    {
+        $pages = new \Pimcore\Model\Document\Listing();
+        $pages->setCondition("type = 'page'");
+        $pages->setOrderKey('key');
+        $pages->setOrder('asc');
+
+        $data = [];
+        foreach ($pages as $page) {
+            $seo = Seo::getOrCreate($page);
+
+            $data[] = [
+                'id' => $page->getId(),
+                'key' => $page->getKey() ?: "Home",
+                'language' => $page->getProperty('language'),
+                'generateSitemap' => $seo->getGenerateSitemap(),
+            ];
+        }
+
+        array_multisort(
+            array_column($data, 'language'), SORT_ASC,
+            array_column($data, 'key'), SORT_ASC,
+            $data
+        );
+
+        return $data;
+    }
+
+    public static function setPages(array $ids): void
+    {
+        $pages = new \Pimcore\Model\Document\Listing();
+        $pages->setCondition("type = 'page'");
+
+        foreach ($pages as $page) {
+            $seo = Seo::getOrCreate($page);
+            $generateSitemap = empty($ids) ? false : in_array($page->getId(), $ids);
+            $seo->setGenerateSitemap($generateSitemap);
+            $seo->save();
+        }
     }
 }

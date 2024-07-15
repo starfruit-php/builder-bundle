@@ -2,9 +2,7 @@
 
 namespace Starfruit\BuilderBundle\Sitemap;
 
-use Starfruit\BuilderBundle\Tool\SystemTool;
 use Starfruit\BuilderBundle\Tool\TextTool;
-use Starfruit\BuilderBundle\Seo\SeoHelper;
 
 class File
 {

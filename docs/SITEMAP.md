@@ -38,6 +38,13 @@ $orders = Setting::getOrder();
 // set
 $order = 'asc';
 Setting::setOrder($order);
+
+// pages for sitemap config
+// get
+$pages = Setting::getPages();
+// set some pages
+$ids = [15, 07, 2024];
+Setting::setPages($ids);
 ```
 
 ## Generate

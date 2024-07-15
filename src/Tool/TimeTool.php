@@ -17,4 +17,9 @@ class TimeTool
 
         return $time->format($format);
     }
+
+    public static function getTimezone()
+    {
+        return date('P');
+    }
 }

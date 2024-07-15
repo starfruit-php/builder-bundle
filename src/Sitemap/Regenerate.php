@@ -62,7 +62,8 @@ class Regenerate extends Generator
             }
 
             if ($generate) {
-                self::generate($object, strtolower($object->getClassname()));
+                self::populate(strtolower($object->getClassname()));
+                // self::generate($object, strtolower($object->getClassname()));
             }
         }
     }
@@ -77,7 +78,8 @@ class Regenerate extends Generator
             }
 
             if ($generate) {
-                self::generate($document, self::PAGE_SECTION_NAME);
+                self::populate(self::PAGE_SECTION_NAME);
+                // self::generate($document, self::PAGE_SECTION_NAME);
             }
         }
     }

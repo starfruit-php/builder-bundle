@@ -37,7 +37,6 @@ class Generator extends File
             $slugs[] = [
                 'loc' => self::getFileName($section),
                 'lastmod' => TimeTool::unixtime2string(filemtime(self::getLocation($section)), self::LASTMOD_FORMAT),
-                'id' => $section,
             ];
         }
 
@@ -84,6 +83,7 @@ class Generator extends File
 
     private static function getPageSlug(?int $id = null)
     {
+        $timezone = TimeTool::getTimezone();
         $sitemapOrder = Setting::getSitemapOrder();
         if (!$id) {
             $query = "SELECT
@@ -93,7 +93,7 @@ class Generator extends File
                         ELSE CONCAT(DOCUMENTS.`path`, DOCUMENTS.`key`)
                         END
                     AS loc,
-                    FROM_UNIXTIME(DOCUMENTS.`modificationDate`, ?) as lastmod,
+                    CONCAT(FROM_UNIXTIME(DOCUMENTS.`modificationDate`, ?), ?) as lastmod,
                     DOCUMENTS.`id` as id
                 FROM `documents` as DOCUMENTS
                 INNER JOIN `documents_page` as PAGES
@@ -105,7 +105,7 @@ class Generator extends File
                 AND SEO.`elementType` = 'document'
                 AND SEO.`generateSitemap` = 1
                 ORDER BY DOCUMENTS.`modificationDate` " . $sitemapOrder;
-            $params = [self::LASTMOD_SQL_FORMAT];
+            $params = [self::LASTMOD_SQL_FORMAT, $timezone];
         } else {
             $query = "SELECT
                     CASE
@@ -114,7 +114,7 @@ class Generator extends File
                         ELSE CONCAT(DOCUMENTS.`path`, DOCUMENTS.`key`)
                         END
                     AS loc,
-                    FROM_UNIXTIME(DOCUMENTS.`modificationDate`, ?) as lastmod,
+                    CONCAT(FROM_UNIXTIME(DOCUMENTS.`modificationDate`, ?), ?) as lastmod,
                     DOCUMENTS.`id` as id
                 FROM `documents` as DOCUMENTS
                 INNER JOIN `documents_page` as PAGES
@@ -127,7 +127,7 @@ class Generator extends File
                 AND SEO.`generateSitemap` = 1
                 AND DOCUMENTS.`id` = ?
                 ORDER BY DOCUMENTS.`modificationDate` " . $sitemapOrder;
-            $params = [self::LASTMOD_SQL_FORMAT, $id];
+            $params = [self::LASTMOD_SQL_FORMAT, $timezone, $id];
         }
 
         $slugs = Db::get()->fetchAllAssociative($query, $params);
@@ -136,11 +136,12 @@ class Generator extends File
 
     private static function getSlugsByClassname(string $classname, ?int $id = null)
     {
+        $timezone = TimeTool::getTimezone();
         $sitemapOrder = Setting::getSitemapOrder();
         if (!$id) {
             $query = "SELECT
                     SLUG.`slug` as loc,
-                    FROM_UNIXTIME(OBJECTS.`modificationDate`, ?) as lastmod,
+                    CONCAT(FROM_UNIXTIME(OBJECTS.`modificationDate`, ?), ?) as lastmod,
                     SLUG.`objectId` as id
                 FROM `object_url_slugs` as SLUG
                 INNER JOIN `classes` as CLASSES
@@ -152,11 +153,11 @@ class Generator extends File
                 AND OBJECTS.`published` = 1
                 ORDER BY OBJECTS.`modificationDate` " . $sitemapOrder;
 
-            $params = [self::LASTMOD_SQL_FORMAT, $classname];
+            $params = [self::LASTMOD_SQL_FORMAT, $timezone, $classname];
         } else {
             $query = "SELECT
                     SLUG.`slug` as loc,
-                    FROM_UNIXTIME(OBJECTS.`modificationDate`, ?) as lastmod,
+                    CONCAT(FROM_UNIXTIME(OBJECTS.`modificationDate`, ?), ?) as lastmod,
                     SLUG.`objectId` as id
                 FROM `object_url_slugs` as SLUG
                 INNER JOIN `classes` as CLASSES
@@ -169,7 +170,7 @@ class Generator extends File
                 AND OBJECTS.`published` = 1
                 ORDER BY OBJECTS.`modificationDate` " . $sitemapOrder;
 
-            $params = [self::LASTMOD_SQL_FORMAT, $id, $classname];
+            $params = [self::LASTMOD_SQL_FORMAT, $timezone, $id, $classname];
         }
 
         $slugs = Db::get()->fetchAllAssociative($query, $params);
