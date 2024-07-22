@@ -5,17 +5,10 @@ namespace Starfruit\BuilderBundle\EventListener\Sitemap;
 use Pimcore\Event\Model\DataObjectEvent;
 use Pimcore\Event\Model\DocumentEvent;
 use Starfruit\BuilderBundle\Sitemap\Regenerate;
+use Starfruit\BuilderBundle\EventListener\Object\BaseListener;
 
-class RegenerateListener
+class RegenerateListener extends BaseListener
 {
-    private function isSaveVersion($event)
-    {
-        $args = $event->getArguments();
-        $saveVersionOnly = isset($args['saveVersionOnly']) && $args['saveVersionOnly'];
-
-        return $saveVersionOnly;
-    }
-
     public function postObjectUpdate(DataObjectEvent $event)
     {
         if (!$this->isSaveVersion($event)) {

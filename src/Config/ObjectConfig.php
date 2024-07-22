@@ -24,6 +24,8 @@ class ObjectConfig
     private $fieldForSlug;
     private $fieldCreateSlug;
     private $updateWhileEmpty;
+    private $updateAfterPublish;
+    private $insertIdToSlug;
 
     private $sitemap;
     private $seoFields;
@@ -119,12 +121,12 @@ class ObjectConfig
         foreach ($languages as $language) {
             $currentSlug = $this->object->$getSlugFunc($language);
 
-            if (empty($currentSlug)) {
-                $value = $this->object->$getValueFunc($language) ?: $defaultValue;
+            if (empty($currentSlug) || $this->updateAfterPublish) {
+                $value = $this->object->$getValueFunc($language);
 
                 if ($value) {
                     $slug = strtolower(TextTool::getPretty($value));
-                    $slug = "/$language/$slug-$id";
+                    $slug = $this->insertIdToSlug ? "/$language/$slug-$id" : "/$language/$slug";
 
                     $urlslug = new UrlSlug($slug);
                     $this->object->$setSlugFunc([$urlslug], $language);
@@ -207,6 +209,8 @@ class ObjectConfig
             $this->fieldForSlug = $this->config['field_for_slug'];
             $this->fieldCreateSlug = $this->config['field_create_slug'];
             $this->updateWhileEmpty = $this->config['update_while_empty'];
+            $this->updateAfterPublish = $this->config['update_after_publish'];
+            $this->insertIdToSlug = $this->config['insert_id_to_slug'];
 
             if (isset($this->config['sitemap'])) {
                 $this->sitemap = $this->config['sitemap'];

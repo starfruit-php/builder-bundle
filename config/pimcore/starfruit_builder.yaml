@@ -5,6 +5,8 @@ starfruit_builder:
     #         field_create_slug: name
     #         field_for_slug: slug
     #         update_while_empty: true
+    #         update_after_publish: false
+    #         insert_id_to_slug: true
     #         seo_fields:
     #             title:
     #             description:
