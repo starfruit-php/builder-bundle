@@ -3,6 +3,7 @@
 namespace Starfruit\BuilderBundle\Extension;
 
 use Twig\TwigFunction;
+use Pimcore\Config;
 use Pimcore\Model\Asset\Image;
 use Pimcore\Model\Asset\Image\Thumbnail;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -85,7 +86,7 @@ class RenderExtension extends \Twig\Extension\AbstractExtension
      * @param string $class
      * @param string $thumbnailName
      */
-    public function renderImage($image, $class = '', $thumbnailName = '')
+    public function renderImage($image, $class = '', $thumbnailName = '', $alt = '')
     {
         if ($image) {
             if ($image instanceof Thumbnail) {
@@ -107,7 +108,9 @@ class RenderExtension extends \Twig\Extension\AbstractExtension
             }
 
             $infoImage = $image->getMetaData();
-            $alt = isset($infoImage['alt']) ? $infoImage['alt'] : '';
+            if (!$alt) {
+                $alt = isset($infoImage['alt']) ? $infoImage['alt'] : Config::getWebsiteConfig()['default_image_alt'];
+            }
             $title = isset($infoImage['title']) ? $infoImage['title'] : '';
             
             $link = "<img
