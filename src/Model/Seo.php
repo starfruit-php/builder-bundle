@@ -343,7 +343,8 @@ class Seo extends AbstractModel
         $document = Document::getById($this->element);
         $title = TextTool::removeHtmlTag($this->title ?: $document->getTitle());
         $description = TextTool::removeHtmlTag($this->description ?: $document->getDescription());
-        $slug = $document->getUrl();
+        $url = $document->getPrettyUrl() ?: $document->getFullPath();
+        $slug = SystemTool::getUrl($url);
         $image = $this->renderImage($document);
 
         return compact('title', 'description', 'image', 'slug');
