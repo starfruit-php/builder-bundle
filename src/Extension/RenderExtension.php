@@ -9,6 +9,7 @@ use Pimcore\Model\Asset\Image\Thumbnail;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Starfruit\BuilderBundle\LinkGenerator\AbstractLinkGenerator;
 use Starfruit\BuilderBundle\Service\EditableService;
+use Starfruit\BuilderBundle\Tool\DocumentTool;
 
 class RenderExtension extends \Twig\Extension\AbstractExtension
 {
@@ -36,49 +37,16 @@ class RenderExtension extends \Twig\Extension\AbstractExtension
     }
 
     /**
-     * @param object $image
-     * @param string $class
+     * @deprecated
+     * 
      * @param string $thumbnailName
      */
-    public function renderEditables($customLayouts)
+    public function renderEditables()
     {
         $request = $this->requestStack->getCurrentRequest();
         $document = $request?->attributes?->get('contentDocument');
-        $editables = $document?->getEditables();
 
-        $editableData = [];
-        foreach ($customLayouts as $customLayout) {
-            $layouts = isset($customLayout['layouts']) ? $customLayout['layouts'] : [];
-            if (!empty($layouts)) {
-                foreach ($layouts as $layout) {
-                    $editable = isset($layout['editable']) ? $layout['editable'] : null;
-
-                    if ($editable) {
-                        $name = isset($layout['params']['name']) ? $layout['params']['name'] : null;
-
-                        if (!$name && $editable == 'list') {
-                            $fields = isset($layout['params']['fields']) ? $layout['params']['fields'] : [];
-                            $fields = array_column($fields, 'name');
-                            $name = isset($layout['params']['prefix']) ? $layout['params']['prefix'] . 'List' : null;
-                        }
-
-                        if ($name) {
-                            $value = $document->getEditable($name);
-
-                            if ($editable == 'list') {
-                                $value = EditableService::getBlock($value, $fields);
-                            } else {
-                                $value = EditableService::getEditdata($value);
-                            }
-
-                            $editableData[$name] = $value;
-                        }
-                    }
-                }
-            }
-        }
-
-        return $editableData;
+        return DocumentTool::renderEditableData($document);
     }
 
     /**
