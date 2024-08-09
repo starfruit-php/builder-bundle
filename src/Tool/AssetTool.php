@@ -132,7 +132,7 @@ class AssetTool
         return $paths;
     }
 
-    public static function getPaths(?ImageGallery $gallery): ?array
+    public static function getPaths(?ImageGallery $gallery, bool $includeDomain = false): ?array
     {
         if (!$gallery) {
             return null;
@@ -144,7 +144,7 @@ class AssetTool
                 $hotpot = $item->getImage();
 
                 if ($hotpot) {
-                    $paths[] = self::getPaths($hotpot);
+                    $paths[] = self::getPath($hotpot, $includeDomain);
                 }
             }
         }
