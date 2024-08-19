@@ -13,7 +13,7 @@ class AssetTool
 {
     const IMAGE_THUMBNAIL_LIST = 'image_thumbnail_list';
 
-    public static function getFrontendFullPath(Asset $asset, $thumbnailName = null): input
+    public static function getFrontendFullPath(Asset $asset, $thumbnailName = null)
     {
         if ($thumbnailName) {
             $thumbnail = Thumbnail\Config::getByName($thumbnailName);

@@ -147,7 +147,8 @@ class DocumentTool
                 $page = Document::getById($internalId);
 
                 if ($page) {
-                    $data['href'] = self::getPageUrl($page);
+                    $url = $page->getPrettyUrl() ?: $page->getFullPath();
+                    $data['href'] = SystemTool::getUrl($url);
                 }
             }
         }
