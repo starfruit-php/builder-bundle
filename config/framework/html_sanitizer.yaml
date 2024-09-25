@@ -35,3 +35,4 @@ framework:
                     source: '*'
                     video: '*'
                     section: '*'
+                    mark: '*'

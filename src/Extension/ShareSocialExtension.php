@@ -48,12 +48,12 @@ class ShareSocialExtension extends AbstractExtension
                     $link = "https://www.pinterest.com/pin/create/?url=" . $url;
                     break;
 
-                case 'instagram':
-                    $link = "https://www.instagram.com/" . $url;
+                case 'telegram':
+                    $link = "https://t.me/share/url?url=" . $url;
                     break;
 
-                case 'google':
-                    $link = "https://plus.google.com/share?url=" . $url;
+                case 'whatsapp':
+                    $link = "https://wa.me/?text=" . $url;
                     break;
             }
 
