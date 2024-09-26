@@ -238,7 +238,10 @@ class AssetTool
 
     private static function formatName(string $name, ?string $extension = null): string
     {
-        $name = str_replace([' ', '/'], ['_', '+'], ltrim($name)) .'('. time() .')';
+        $name = str_replace(' ', '-', $name); // Replaces all spaces with hyphens.
+        $name = preg_replace('/[^A-Za-z0-9\-]/', '', $name); // Removes special chars.
+        $name = preg_replace('/-+/', '-', $name); // Replaces multiple hyphens with single one.
+        $name .= '-' . time();
 
         if ($extension) {
             $name .= '.'. $extension;
