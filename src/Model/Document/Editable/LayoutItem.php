@@ -2,11 +2,8 @@
 
 namespace Starfruit\BuilderBundle\Model\Document\Editable;
 
-class LayoutItem
+class LayoutItem extends LayoutElement
 {
-    const DEFAULT_PARAMS = [];
-    const DEFAULT_COL = 12;
-
     public function __construct(
         protected string $editable,
         protected string $name,
@@ -23,5 +20,13 @@ class LayoutItem
             'col' => $this->col,
             'params' => array_merge($this->params, ['name' => $this->name]),
         ];
+    }
+
+    public function renderBlock()
+    {
+        return array_merge($this->params, [
+            'type' => $this->editable,
+            'name' => $this->name
+        ]);
     }
 }

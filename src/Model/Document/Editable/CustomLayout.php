@@ -18,7 +18,7 @@ class CustomLayout
 
         if (!empty($this->layoutItems)) {
             foreach ($this->layoutItems as $layoutItem) {
-                if ($layoutItem instanceof LayoutItem) {
+                if ($layoutItem instanceof LayoutElement) {
                     $layouts[] = $layoutItem->render();
                 }
             }
