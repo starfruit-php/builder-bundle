@@ -8,7 +8,7 @@ use Starfruit\BuilderBundle\Tool\SystemTool;
 
 class ShareSocialExtension extends AbstractExtension
 {
-    const ALLOW_TYPES = ['facebook', 'twitter', 'linkedin', 'printerest', 'telegram', 'whatsapp'];
+    const ALLOW_TYPES = ['facebook', 'twitter', 'linkedin', 'pinterest', 'telegram', 'whatsapp'];
 
     /**
      * @inheritDoc
