@@ -9,16 +9,20 @@ class EditableBaseController extends \Pimcore\Controller\FrontendController
         $trace = debug_backtrace();
         $call = $trace[1];
 
-        $classes = explode("\\", $call['class']);
+        return self::getEditablesFromClass($call['class'], $call['function']);
+    }
+
+    public static function getEditablesFromClass($originClass, $function)
+    {
+        $classes = explode("\\", $originClass);
         $class = end($classes);
+
         // add `Editable` to prefix of class name
-        $editableClass = str_replace($class, 'Editable' . $class, $call['class']);
+        $editableClass = str_replace($class, 'Editable' . $class, $originClass);
 
         if (class_exists($editableClass)) {
-            if (method_exists($editableClass, $call['function'])) {
-                $editableCustom = call_user_func($editableClass . '::' . $call['function']);
-
-                return $editableCustom;
+            if (method_exists($editableClass, $function)) {
+                return call_user_func($editableClass . '::' . $function);
             }
         }
 
