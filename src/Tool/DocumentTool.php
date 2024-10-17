@@ -53,7 +53,7 @@ class DocumentTool
 
         if (!empty($blockEditables)) {
             foreach ($blockEditables as $field) {
-                $totalLoop = $data[$field];
+                $totalLoop = $data[$field] ?: [];
                 $data[$field] = [];
 
                 foreach ($totalLoop as $loop) {
