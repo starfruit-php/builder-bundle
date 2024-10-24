@@ -30,5 +30,7 @@ class ControllerListener {
         $this->twig->addGlobal('builderEditablePath', "@StarfruitBuilder/editmode/editables");
         $this->twig->addGlobal('builderEditmodeLayout', "@StarfruitBuilder/editmode/editables/layout/layout.html.twig");
         $this->twig->addGlobal('builderEditmodeTitle', "@StarfruitBuilder/editmode/editables/layout/title.html.twig");
+
+        $this->twig->addGlobal('builderJsListingObject', "/bundles/starfruitbuilder/js/helper/listing-object.js");
     }
 }
