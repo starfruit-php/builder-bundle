@@ -39,4 +39,21 @@ Example
 $('.nav .nav-item').each(function() {
     new BuilderListingObject(this);
 });
+
+// or using callback fucntions
+
+new BuilderListingObject($('#object-list'), {
+    startRender: function(options) {
+        console.log('start render');
+        console.log(options);
+    },
+    afterRender: function(options, data) {
+        console.log(data);
+    },
+    afterRenderTimeout: 1000,
+    finishRender: function(options) {
+        console.log('finish render');
+        console.log(options);
+    },
+});
 ```

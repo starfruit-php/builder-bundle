@@ -1,4 +1,4 @@
-var BuilderListingObject = function(element) {
+var BuilderListingObject = function(element, callbacks = {}) {
     var options = {
         url: null,  // call data
         dataBlock: null, // insert data after call
@@ -6,6 +6,10 @@ var BuilderListingObject = function(element) {
         callOneTime: true, // call data one time or always re-call
         renderAfterInit: false, // render data of first element after init or not
     }
+
+    var callbackFunction = {
+        afterRender: callbacks?.afterRender,
+    };
 
     init();
     $(element).bind('click', function() {
@@ -37,6 +41,9 @@ var BuilderListingObject = function(element) {
             ) {
                 $.get(options.url, function (data, textStatus, jqXHR) {
                     options.useAppend ? $(options.dataBlock).append(data) : $(options.dataBlock).html(data);
+
+                    // callbackFunction.afterRender();
+                    console.log(callbackFunction)
                 }, 'html');
             }
         }
