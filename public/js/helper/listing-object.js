@@ -8,7 +8,10 @@ var BuilderListingObject = function(element, callbacks = {}) {
     }
 
     var callbackFunction = {
-        afterRender: callbacks?.afterRender,
+        startRender: callbacks?.startRender || function() {},
+        afterRender: callbacks?.afterRender || function() {},
+        afterRenderTimeout: callbacks?.afterRenderTimeout || 100,
+        finishRender: callbacks?.finishRender || function() {},
     };
 
     init();
@@ -35,6 +38,8 @@ var BuilderListingObject = function(element, callbacks = {}) {
 
     function render()
     {
+        callbackFunction.startRender(options);
+
         if (options.url && options.dataBlock) {
             if ((options.callOneTime && $(options.dataBlock).children().length == 0) ||
                 !options.callOneTime
@@ -42,10 +47,13 @@ var BuilderListingObject = function(element, callbacks = {}) {
                 $.get(options.url, function (data, textStatus, jqXHR) {
                     options.useAppend ? $(options.dataBlock).append(data) : $(options.dataBlock).html(data);
 
-                    // callbackFunction.afterRender();
-                    console.log(callbackFunction)
+                    setTimeout(function() {
+                        callbackFunction.afterRender(options, data)
+                    }, callbackFunction.afterRenderTimeout);
                 }, 'html');
             }
         }
+
+        callbackFunction.finishRender(options);
     }
 }
