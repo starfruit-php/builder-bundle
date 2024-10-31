@@ -23,6 +23,11 @@ class DocumentTool
             $document = Document::getById($id);
         }
 
+        return self::getDataFromDocument($document, $formatJson);
+    }
+
+    private static function getDataFromDocument(Document $document, bool $formatJson)
+    {
         if (!($document instanceof Document) || $document->getType() == 'folder') {
             return null;
         }
@@ -31,15 +36,10 @@ class DocumentTool
             $document = Document::getByPath($document->getHref());
         }
 
-        if ($document) {
-            return self::getDataFromDocument($document, $formatJson);
+        if (!$document) {
+            return null;
         }
 
-        return null;
-    }
-
-    private static function getDataFromDocument(Document $document, bool $formatJson)
-    {
         $data = [];
         $editables = $document->getEditables();
 
