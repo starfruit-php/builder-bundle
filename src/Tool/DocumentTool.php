@@ -53,24 +53,26 @@ class DocumentTool
 
         if (!empty($blockEditables)) {
             foreach ($blockEditables as $field) {
-                $totalLoop = $data[$field] ?: [];
-                $data[$field] = [];
+                if (isset($data[$field])) {
+                    $totalLoop = $data[$field] ?: [];
+                    $data[$field] = [];
 
-                foreach ($totalLoop as $loop) {
-                    $loopData = []; // dữ liệu mới cho block
+                    foreach ($totalLoop as $loop) {
+                        $loopData = []; // dữ liệu mới cho block
 
-                    foreach ($data as $name => $value) {
-                        $find = $field .":". $loop .".";
-                        if (strpos($name, $find) !== false) {
-                            $elmentName = substr($name, strlen($find));
+                        foreach ($data as $name => $value) {
+                            $find = $field .":". $loop .".";
+                            if (strpos($name, $find) !== false) {
+                                $elmentName = substr($name, strlen($find));
 
-                            $loopData[$elmentName] = $value;
+                                $loopData[$elmentName] = $value;
 
-                            unset($data[$name]);
+                                unset($data[$name]);
+                            }
                         }
-                    }
 
-                    $data[$field][] = $loopData;
+                        $data[$field][] = $loopData;
+                    }
                 }
             }
         }
@@ -144,10 +146,10 @@ class DocumentTool
             if ($internalType == 'document') {
                 $internalId = $editable->getData()['internalId'];
 
-                $page = Document::getById($internalId);
+                $page = Document\Page::getById($internalId);
 
                 if ($page) {
-                    $url = $page->getPrettyUrl() ?: $page->getFullPath();
+                    $url = $page?->getPrettyUrl() ?: $page->getFullPath();
                     $data['href'] = SystemTool::getUrl($url);
                 }
             }
