@@ -47,7 +47,7 @@ class ListingExtension extends AbstractExtension
         }
 
         if (isset($params['orderRandom']) && $params['orderRandom']) {
-            $items->setOrderKey("RAND()", false);
+            $list->setOrderKey("RAND()", false);
         }
 
         $page = isset($params['page']) ? $params['page'] : 0;
