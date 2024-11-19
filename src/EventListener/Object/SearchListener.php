@@ -2,7 +2,7 @@
 
 namespace Starfruit\BuilderBundle\EventListener\Object;
 
-use Pimcore\Model\DataObject;
+use Pimcore\Model\DataObject\Folder;
 use Pimcore\Event\Model\DataObjectEvent;
 
 class SearchListener
@@ -14,26 +14,31 @@ class SearchListener
     public function preUpdate(DataObjectEvent $event)
     {
         $object = $event->getObject();
-        if (!($object instanceof DataObject\Folder)) {
-            $method = 'get' . ucfirst(self::SEARCH_FIELD);
+        if (!$this->isSaveVersion($event) && !($object instanceof Folder)) {
+            $args = $event->getArguments();
+            $skipUpdateSearchData = isset($args['skipUpdateSearchData']) && $args['skipUpdateSearchData'];
 
-            if (method_exists($object, $method)) {
-                $searchData = [];
+            if (!$skipUpdateSearchData) {
+                $method = 'get' . ucfirst(self::SEARCH_FIELD);
 
-                $class = $object->getClass();
-                $fieldDefinition = $class->getFieldDefinition(self::SEARCH_FIELD);
+                if (method_exists($object, $method)) {
+                    $searchData = [];
 
-                $tooltip = $fieldDefinition->tooltip;
-                $fields = explode("\n", $tooltip);
-                if (!empty($tooltip)) {
-                    foreach ($fields as $field) {
-                        $searchData[] = $object->{'get' . ucfirst($field)}();
+                    $class = $object->getClass();
+                    $fieldDefinition = $class->getFieldDefinition(self::SEARCH_FIELD);
+
+                    $tooltip = $fieldDefinition->tooltip;
+                    $fields = explode("\n", $tooltip);
+                    if (!empty($tooltip)) {
+                        foreach ($fields as $field) {
+                            $searchData[] = $object->{'get' . ucfirst($field)}();
+                        }
                     }
-                }
 
-                $method = 'set' . ucfirst(self::SEARCH_FIELD);
-                $object->{$method}(implode(';;;;', $searchData));
-            }
+                    $method = 'set' . ucfirst(self::SEARCH_FIELD);
+                    $object->{$method}(implode(';;;;', $searchData));
+                }
+            }  
         }
     }
 }
