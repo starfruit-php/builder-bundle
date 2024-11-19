@@ -62,6 +62,11 @@ services:
     Starfruit\BuilderBundle\EventListener\Object\SlugListener:
         tags:
             - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: preUpdate }
+
+    Starfruit\BuilderBundle\EventListener\Object\SearchListener:
+        tags:
+            - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: preUpdate }
+
     Starfruit\BuilderBundle\EventListener\Document\StoreAddCodeListener:
         tags:
             - { name: kernel.event_listener, event: pimcore.document.postUpdate, method: postUpdate }
