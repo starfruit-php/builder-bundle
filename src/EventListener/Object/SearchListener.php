@@ -5,7 +5,7 @@ namespace Starfruit\BuilderBundle\EventListener\Object;
 use Pimcore\Model\DataObject\Folder;
 use Pimcore\Event\Model\DataObjectEvent;
 
-class SearchListener
+class SearchListener extends BaseListener
 {
     const SEARCH_FIELD = 'searchData';
 
