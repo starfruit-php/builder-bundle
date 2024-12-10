@@ -10,6 +10,7 @@ use Pimcore\Model\DataObject\Data\UrlSlug;
 use Starfruit\BuilderBundle\Tool\TextTool;
 use Starfruit\BuilderBundle\Tool\AssetTool;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
+use Pimcore\Model\Site;
 
 class ObjectConfig
 {
@@ -151,6 +152,18 @@ class ObjectConfig
         $slugs = $locale ? $this->object->$function($locale) : $this->object->$function();
 
         if (!is_array($slugs) || empty($slugs)) {
+            return '';
+        }
+
+        $siteId = 0;
+        if (Site::isSiteRequest()) {
+            $site = Site::getCurrentSite();
+            $siteId = $site->getId();
+        }
+
+        $slugs = array_filter($slugs, fn($e) => $e->getSiteId() == $siteId);
+
+        if (empty($slugs)) {
             return '';
         }
 
