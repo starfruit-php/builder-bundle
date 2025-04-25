@@ -13,6 +13,7 @@ use Pimcore\Model\DataObject;
 use Pimcore\Model\DataObject\Data\UrlSlug;
 use Starfruit\BuilderBundle\Config\ObjectConfig;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
+use Pimcore\Model\Site;
 
 class LanguageSwitcherExtension extends AbstractExtension
 {
@@ -60,7 +61,13 @@ class LanguageSwitcherExtension extends AbstractExtension
         $links = [];
 
         foreach ($languages as $language) {
-            $languageRoot = '/' . $language;
+            try {
+                $site = Site::getCurrentSite();
+                $languageRoot = $site->getRootDocument()->getKey() . '/' . $language;
+            } catch (\Throwable $e) {
+                $languageRoot = '/' . $language;
+            }
+
             //skip if root document for local is missing
             $languageDocument = Document::getByPath($languageRoot);
             if (!($languageDocument instanceof Document && $languageDocument->getPublished())) {
