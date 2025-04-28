@@ -8,8 +8,12 @@
         {% apply spaceless %}
             {{ block("layout_link") }}
 
+            {% if not document is defined or not document %}
+                {% set document = pimcore_document(1) %}
+            {% endif %}
+
             {# Favicon #}
-            {% set favicon = pimcore_website_config('layout_favicon') %}
+            {% set favicon = document.getProperty('layout_favicon') %}
             {% set favicon = favicon and favicon is instanceof('\\Pimcore\\Model\\Asset\\Image') ? favicon.getFrontendFullPath() : null %}
             {% if favicon %}
                 {% do pimcore_head_link().appendStylesheet(
@@ -21,10 +25,6 @@
                         type: "image/x-icon"
                     }
                 ) %}
-            {% endif %}
-
-            {% if not document is defined or not document %}
-                {% set document = pimcore_document(1) %}
             {% endif %}
 
             {# SEO #}
