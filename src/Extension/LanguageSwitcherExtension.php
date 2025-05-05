@@ -61,7 +61,7 @@ class LanguageSwitcherExtension extends AbstractExtension
         $links = [];
 
         foreach ($languages as $language) {
-            $languageRoot = '/' . $language;
+            $languageRoot = $languageTarget = '/' . $language;
             if (Site::isSiteRequest()) {
                 $site = Site::getCurrentSite();
                 $languageRoot = '/' . $site->getRootDocument()->getKey() . '/' . $language;
@@ -85,7 +85,7 @@ class LanguageSwitcherExtension extends AbstractExtension
             }
 
             if (!$target) {
-                $target = $languageRoot;
+                $target = $languageTarget;
                 if (isset($translations[$language])) {
                     $localizedDocument = Document::getById($translations[$language]);
                     if ($localizedDocument) {
