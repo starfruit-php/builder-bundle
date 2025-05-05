@@ -61,11 +61,10 @@ class LanguageSwitcherExtension extends AbstractExtension
         $links = [];
 
         foreach ($languages as $language) {
-            try {
+            $languageRoot = '/' . $language;
+            if (Site::isSiteRequest()) {
                 $site = Site::getCurrentSite();
-                $languageRoot = $site->getRootDocument()->getKey() . '/' . $language;
-            } catch (\Throwable $e) {
-                $languageRoot = '/' . $language;
+                $languageRoot = '/' . $site->getRootDocument()->getKey() . '/' . $language;
             }
 
             //skip if root document for local is missing
