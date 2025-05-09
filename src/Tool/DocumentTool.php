@@ -138,6 +138,8 @@ class DocumentTool
     {
         $data['href'] = $editable->getHref();
         $data['text'] = $editable->getText();
+        $rel = $editable->getRel();
+        $data['rel'] = $rel ? ($rel == 'dofollow' ? $rel : 'nofollow') : null;
 
         $internal = $editable->getData()['internal'];
         if ($internal) {
