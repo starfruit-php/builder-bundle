@@ -126,8 +126,18 @@ class ObjectConfig
                 $value = $this->object->$getValueFunc($language);
 
                 if ($value) {
+                    // convert by language code config
+                    $languageCode = $language;
+                    $languageCodeConvert = [
+                        'zh_Hant_TW' => 'tw',
+                        'hi_IN' => 'hi'
+                    ];
+                    if (isset($languageCodeConvert[$language])) {
+                        $languageCode = $languageCodeConvert[$language];
+                    }
+
                     $slug = strtolower(TextTool::getPretty($value));
-                    $slug = $this->insertIdToSlug ? "/$language/$slug-$id" : "/$language/$slug";
+                    $slug = $this->insertIdToSlug ? "/$languageCode/$slug-$id" : "/$languageCode/$slug";
 
                     $urlslug = new UrlSlug($slug);
                     $this->object->$setSlugFunc([$urlslug], $language);

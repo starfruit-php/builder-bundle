@@ -61,10 +61,19 @@ class LanguageSwitcherExtension extends AbstractExtension
         $links = [];
 
         foreach ($languages as $language) {
-            $languageRoot = $languageTarget = '/' . $language;
+            $languageCode = $language;
+            $languageCodeConvert = [
+                'zh_Hant_TW' => 'tw',
+                'hi_IN' => 'hi'
+            ];
+            if (isset($languageCodeConvert[$language])) {
+                $languageCode = $languageCodeConvert[$language];
+            }
+
+            $languageRoot = $languageTarget = '/' . $languageCode;
             if (Site::isSiteRequest()) {
                 $site = Site::getCurrentSite();
-                $languageRoot = '/' . $site->getRootDocument()->getKey() . '/' . $language;
+                $languageRoot = '/' . $site->getRootDocument()->getKey() . '/' . $languageCode;
             }
 
             //skip if root document for local is missing
@@ -96,7 +105,7 @@ class LanguageSwitcherExtension extends AbstractExtension
 
             $links[$language] = [
                 'link' => $target,
-                'language' => $language,
+                'language' => $languageCode,
                 'text' => \Locale::getDisplayLanguage($language),
                 'image' => self::getLanguageFlagFile($language),
             ];
@@ -158,7 +167,7 @@ class LanguageSwitcherExtension extends AbstractExtension
             'cy' => 'gb-wls', 'cy-gb' => 'gb-wls', 'fy' => 'nl', 'xh' => 'za', 'yo' => 'bj', 'zu' => 'za',
             'ta' => 'lk', 'te' => 'in', 'ss' => 'za', 'sw' => 'ke', 'so' => 'so', 'si' => 'lk', 'ii' => 'cn',
             'zh-hans' => 'cn', 'sn' => 'zw', 'rm' => 'ch', 'pa' => 'in', 'fa' => 'ir', 'lv' => 'lv', 'gl' => 'es',
-            'fil' => 'ph',
+            'fil' => 'ph', 'zh_hant_tw' => 'tw', 'hi_in' => 'in'
         ];
 
         if (array_key_exists($code, $languageCountryMapping)) {
