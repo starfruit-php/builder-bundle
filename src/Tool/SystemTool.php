@@ -39,4 +39,9 @@ class SystemTool
     {
         return preg_match('/^http(s)?:\\/\\/.+/', $path) ? $path : self::getDomain() . $path;
     }
+
+    public static function forceHttpsUrl($path)
+    {
+        return \Pimcore\Config::getWebsiteConfig('builder_force_https') ? str_replace('http://', 'https://', $path) : $path;
+    }
 }

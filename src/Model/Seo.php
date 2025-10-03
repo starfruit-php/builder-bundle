@@ -278,7 +278,7 @@ class Seo extends AbstractModel
             $slug = $withDomain ? $document->getUrl() : $document->getFullPath();
         }
 
-        return $slug;
+        return SystemTool::forceHttpsUrl($slug);
     }
 
     private function renderImage($element = null)
