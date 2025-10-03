@@ -10,6 +10,7 @@ use Pimcore\Model\DataObject\Data\UrlSlug;
 use Starfruit\BuilderBundle\Tool\TextTool;
 use Starfruit\BuilderBundle\Tool\AssetTool;
 use Starfruit\BuilderBundle\Tool\LanguageTool;
+use Starfruit\BuilderBundle\Tool\SystemTool;
 use Pimcore\Model\Site;
 
 class ObjectConfig
@@ -202,6 +203,7 @@ class ObjectConfig
                     $seoConfig = new SeoConfig;
                     $thumbnail = $seoConfig->getImageThumbnail();
                     $value = AssetTool::getFrontendFullPath($value, $thumbnail);
+                    $value = SystemTool::forceHttpsUrl($value);
                 }
 
                 $seoData[$key] = (string) $value;

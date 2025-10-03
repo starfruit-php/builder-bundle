@@ -305,7 +305,7 @@ class Seo extends AbstractModel
             }
         }
 
-        return $image;
+        return SystemTool::forceHttpsUrl($image);
     }
 
     private function getObjectScoring($getFullFields = false): ?array
@@ -344,7 +344,7 @@ class Seo extends AbstractModel
         $title = TextTool::removeHtmlTag($this->title ?: $document->getTitle());
         $description = TextTool::removeHtmlTag($this->description ?: $document->getDescription());
         $url = $document->getPrettyUrl() ?: $document->getFullPath();
-        $slug = SystemTool::getUrl($url);
+        $slug = SystemTool::forceHttpsUrl(SystemTool::getUrl($url));
         $image = $this->renderImage($document);
 
         return compact('title', 'description', 'image', 'slug');
